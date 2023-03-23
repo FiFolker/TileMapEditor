@@ -20,13 +20,13 @@ public class ConfigFrame extends JFrame{
 	JFrame configWindow;
 
 	JLabel tileSizeInfo = new JLabel("Taille d'un tile : ");
-	JTextField tileSizeTextField = new JTextField(Integer.toString(Config.tileSize), 5);
+	JTextField tileSizeTextField = new JTextField(Integer.toString(Config.tileSize), 6);
 
 	JLabel nbColInfo = new JLabel("Nombre de colonnes : ");
-	JTextField nbColTextField = new JTextField(Integer.toString(Config.nbCol), 5);
+	JTextField nbColTextField = new JTextField(Integer.toString(Config.nbCol), 6);
 
 	JLabel nbRowInfo = new JLabel("Nombre de lignes : ");
-	JTextField nbRowTextField = new JTextField(Integer.toString(Config.nbRow), 5);
+	JTextField nbRowTextField = new JTextField(Integer.toString(Config.nbRow),6);
 	JButton okButton = new JButton("Valider");
 	JButton cancelButton = new JButton("Annuler");
 	

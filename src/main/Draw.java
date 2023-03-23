@@ -10,12 +10,16 @@ import settings.Config;
 public class Draw extends JPanel implements Runnable{
 
 	Thread drawThread;
+	MouseHandler mouseH = new MouseHandler();
+	MenuBar menuB = new MenuBar();
 
 	// FPS
 	int FPS = 25;
 
 	public void Draw(){
-		
+		this.addMouseListener(mouseH);
+		this.addMouseMotionListener(mouseH);
+		this.setFocusable(true);
 	}
 
 
@@ -62,12 +66,16 @@ public class Draw extends JPanel implements Runnable{
 	}
 
 	public void update(){
-
 	}
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
+
+		if(mouseH.clicked){
+			g2.drawImage(menuB.tileM.tiles.get(0).image, mouseH.x, mouseH.y, null);
+			System.out.println("tryDraw");
+		}
 
 		for(int x = 0; x < Config.nbCol; x++){
 			for(int y = 0; y < Config.nbRow; y++){

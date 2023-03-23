@@ -2,16 +2,23 @@ package main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import settings.Config;
 import settings.ConfigFrame;
+import tiles.TilesManager;
 
 public class MenuBar extends JMenuBar{
 	public JMenu fileMenu, tilesMenu, sortTilesMenu;
 	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem;
+
+	public TilesManager tileM;
 
 	public MenuBar(){
 		fileMenu = new JMenu("Fichiers");
@@ -89,7 +96,22 @@ public class MenuBar extends JMenuBar{
 	}
 
 	protected void loadTilesFolderItemAction(ActionEvent evt) {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("."));
+		chooser.setDialogTitle("Dossier de tiles");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			Config.directoryOfTiles = chooser.getSelectedFile();
+			tileM = new TilesManager();
+			System.out.println(Config.directoryOfTiles);
+		} else {
+			System.out.println("No Selection ");
+		}
 	}
+
+   
 
 	protected void saveMapItemAction(ActionEvent evt) {
 	}
