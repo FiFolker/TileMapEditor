@@ -17,8 +17,6 @@ public class Draw extends JPanel implements Runnable{
 	int FPS = 25;
 
 	public void Draw(){
-		this.addMouseListener(mouseH);
-		this.addMouseMotionListener(mouseH);
 		this.setFocusable(true);
 	}
 

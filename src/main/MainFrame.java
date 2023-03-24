@@ -18,6 +18,8 @@ public class MainFrame {
 		window.setPreferredSize(new Dimension(1080, 720));
 
 		window.setJMenuBar(new MenuBar());
+		window.addMouseListener(new MouseHandler());
+		window.addMouseMotionListener(new MouseHandler());
 
 		Draw d = new Draw();
 		window.add(d);

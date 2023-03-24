@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import settings.Config;
+
 public class MouseHandler implements MouseListener, MouseMotionListener {
 	
 	int x;
@@ -15,13 +17,16 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	public void mouseMoved(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
-		System.out.println("x : " + x + " y : " + y);
+		MenuBar mb = new MenuBar();
+
+		System.out.println("x : " + x + " y : " + y );
+		System.out.println("Col : " +  x/Config.tileSize + " Row : " + (y-25/Config.tileSize) );
 
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("tryDraw " + e.getClickCount());
+		//System.out.println("tryDraw " + e.getClickCount());
 		clicked = true;
 	}
 

@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -21,6 +22,7 @@ public class MenuBar extends JMenuBar{
 	public TilesManager tileM;
 
 	public MenuBar(){
+		this.setPreferredSize(new Dimension(1080, 25));
 		fileMenu = new JMenu("Fichiers");
 
 		loadMapItem = new JMenuItem("Charger Map");
@@ -34,7 +36,6 @@ public class MenuBar extends JMenuBar{
 		fileMenu.add(configItem);
 		fileMenu.add(helpItem);
 		fileMenu.add(leaveItem);
-
 
 		tilesMenu = new JMenu("Tiles");
 
