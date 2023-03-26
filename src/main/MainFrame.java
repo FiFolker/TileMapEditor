@@ -18,7 +18,7 @@ public class MainFrame {
 		window.setIconImage(ImageIO.read(new File("assets/icons/tiled.png")));
 		window.setPreferredSize(new Dimension(1080, 720));
 
-		window.setJMenuBar(new MenuBar(TileEdit));
+		window.setJMenuBar(new TopMenuBar(TileEdit));
 		window.addMouseListener(mouseH);
 		window.addMouseMotionListener(mouseH);
 

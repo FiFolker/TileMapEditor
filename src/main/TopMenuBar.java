@@ -15,14 +15,14 @@ import settings.Config;
 import settings.ConfigFrame;
 import tiles.TilesManager;
 
-public class MenuBar extends JMenuBar{
+public class TopMenuBar extends JMenuBar{
 	public JMenu fileMenu, tilesMenu, sortTilesMenu;
 	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem;
 
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
 
-	public MenuBar(TileEditorPanel TE){
+	public TopMenuBar(TileEditorPanel TE){
 		this.TE = TE;
 		this.setPreferredSize(new Dimension(1080, 25));
 		fileMenu = new JMenu("Fichiers");
@@ -107,10 +107,9 @@ public class MenuBar extends JMenuBar{
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			Config.directoryOfTiles = chooser.getSelectedFile();
-			MenuBar.tileM = new TilesManager();
+			TopMenuBar.tileM = new TilesManager();
 			TE.TreeT.addTilesToJTree();
 			TE.jt.updateUI();
-			
 			System.out.println(Config.directoryOfTiles);
 		} else {
 			System.out.println("No Selection ");
@@ -120,6 +119,9 @@ public class MenuBar extends JMenuBar{
    
 
 	protected void saveMapItemAction(ActionEvent evt) {
+		if(TopMenuBar.tileM == null){
+			System.out.println("Il faut avoir fait une map pour pouvoir la save");
+		}
 	}
 
 	protected void loadMapItemAction(ActionEvent event) {

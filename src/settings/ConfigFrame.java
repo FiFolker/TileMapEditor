@@ -1,5 +1,6 @@
 package settings;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.TopMenuBar;
+import tiles.TilesManager;
+
 public class ConfigFrame extends JFrame{
 
 	JFrame configWindow;
@@ -27,6 +31,10 @@ public class ConfigFrame extends JFrame{
 
 	JLabel nbRowInfo = new JLabel("Nombre de lignes : ");
 	JTextField nbRowTextField = new JTextField(Integer.toString(Config.nbRow),6);
+
+	JLabel delimiterInfo = new JLabel("Délimiteur : ");
+	JTextField delimiterTextField = new JTextField(Config.delimiter,3);
+
 	JButton okButton = new JButton("Valider");
 	JButton cancelButton = new JButton("Annuler");
 	
@@ -46,7 +54,7 @@ public class ConfigFrame extends JFrame{
 		configWindow.setPreferredSize(new Dimension(640, 480));
 
 		configWindow.add(setConfigPanel());
-		setActionListener();
+		setButtonActionListener();
 
 		configWindow.pack();
 
@@ -61,6 +69,16 @@ public class ConfigFrame extends JFrame{
 		fieldOnlyIntMaxLengthListener(tileSizeTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbColTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbRowTextField, 3);
+		
+		delimiterTextField.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent ke) {
+				if (delimiterTextField.getText().length() >= 1) // limit textfield to maxLength characters
+				{
+					ke.consume();
+				}
+
+			}
+		});
 
 		configPanel.add(tileSizeInfo);
 		configPanel.add(tileSizeTextField);
@@ -71,21 +89,33 @@ public class ConfigFrame extends JFrame{
 		configPanel.add(nbRowInfo);
 		configPanel.add(nbRowTextField);
 
+		configPanel.add(delimiterInfo);
+		configPanel.add(delimiterTextField);
+
 		configPanel.add(okButton);
 		configPanel.add(cancelButton);
 
 		return configPanel;
 	}
 
-	public void setActionListener(){
+	public void setButtonActionListener(){
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Config.tileSize = Integer.parseInt(tileSizeTextField.getText());
-				Config.nbCol = Integer.parseInt(nbRowTextField.getText());
-				Config.nbRow = Integer.parseInt(nbColTextField.getText());
+				int newTileSize = Integer.parseInt(tileSizeTextField.getText());
+				int newNbCol = Integer.parseInt(nbColTextField.getText());
+				int newNbRow = Integer.parseInt(nbRowTextField.getText());
+
+				Config.tileSize = newTileSize;	
+				Config.nbCol = newNbCol;
+				Config.nbRow = newNbRow;
 				Config.mapHeight = Config.nbRow*Config.tileSize;
 				Config.mapWidth = Config.nbCol*Config.tileSize;
+				if(TopMenuBar.tileM != null){
+					TopMenuBar.tileM.reloadMap();
+				}
+				
+				Config.delimiter = delimiterTextField.getText();
 				configWindow.dispose();
 			}
 
@@ -102,7 +132,7 @@ public class ConfigFrame extends JFrame{
 
 
 
-	void fieldOnlyIntMaxLengthListener(JTextField field, int maxLength) { // faire de manière générale avec un new JTextField pour tous les text field avec paramètre de length voulu
+	private void fieldOnlyIntMaxLengthListener(JTextField field, int maxLength) { // faire de manière générale avec un new JTextField pour tous les text field avec paramètre de length voulu
 		field.addKeyListener(new KeyAdapter() {
 			
 			public void keyTyped(KeyEvent ke) {
@@ -125,6 +155,4 @@ public class ConfigFrame extends JFrame{
 			}
 		});
 	}
-
-
 }

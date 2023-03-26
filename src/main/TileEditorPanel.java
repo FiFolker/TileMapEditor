@@ -16,8 +16,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 	Thread drawThread;
 	MouseHandler mouseH = new MouseHandler();
-	MenuBar menuB = new MenuBar(this);
-	TreeTiles TreeT = new TreeTiles();
+	TopMenuBar menuB = new TopMenuBar(this);
+	TreeTiles TreeT = new TreeTiles(this);
 	public JTree jt = new JTree(TreeT.listOfTiles);
 	public int indexOfSelectedNode = 0;
 		
@@ -33,6 +33,9 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				indexOfSelectedNode = jt.getRowForPath(jt.getSelectionPath()) - 1;
+				if(indexOfSelectedNode <= -1){
+					indexOfSelectedNode = 0;
+				}
 			}
 			
 		});
@@ -52,7 +55,6 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		double drawInterval = 1000000000/FPS;
 		double delta = 0;
 		long timer = 0;
-		int drawCount = 0;
 		long currentTime = 0;
 		long lastTime = System.nanoTime();
 
@@ -68,13 +70,10 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				update();
 				repaint();
 				delta --;
-				drawCount ++;
 			}
 			
 			if(timer >= 1000000000){
-				System.out.println(drawCount);
 				timer = 0;
-				drawCount = 0;
 			}
 			
 			
@@ -84,10 +83,15 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	}
 
 	public void update(){
-		if(MenuBar.tileM != null && MainFrame.mouseH.clicked){
+		if(TopMenuBar.tileM != null && MainFrame.mouseH.clicked){
 			int col = MainFrame.mouseH.x / Config.tileSize;
 			int row = MainFrame.mouseH.y / Config.tileSize;
-			MenuBar.tileM.map[col][row - 3] = indexOfSelectedNode;
+			try{
+				TopMenuBar.tileM.map[col][row - 3] = indexOfSelectedNode;
+			}catch(Exception e){
+				System.out.println("Problème dans le set des tiles dans la map[][] " + e);
+			}
+			
 		}
 	}
 
@@ -95,10 +99,10 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		if(MenuBar.tileM != null){
-			for(int x = 0; x<MenuBar.tileM.map.length ; x++){
-				for(int y = 0; y<MenuBar.tileM.map[x].length ; y++){
-					g2.drawImage(MenuBar.tileM.tiles.get(MenuBar.tileM.map[x][y]).image, x*Config.tileSize, y*Config.tileSize, null);
+		if(TopMenuBar.tileM != null){
+			for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
+				for(int y = 0; y<TopMenuBar.tileM.map[x].length ; y++){
+					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[x][y]).image, x*Config.tileSize, y*Config.tileSize, Config.tileSize, Config.tileSize, null);
 				}
 			}
 		}
@@ -110,9 +114,6 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				g2.drawRect(x*Config.tileSize,y*Config.tileSize, Config.tileSize, Config.tileSize);
 			}
 		}
-
-		
-
 	}
 	
 }
