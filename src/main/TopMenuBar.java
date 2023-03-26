@@ -4,12 +4,15 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import settings.Config;
 import settings.ConfigFrame;
@@ -121,6 +124,19 @@ public class TopMenuBar extends JMenuBar{
 	protected void saveMapItemAction(ActionEvent evt) {
 		if(TopMenuBar.tileM == null){
 			System.out.println("Il faut avoir fait une map pour pouvoir la save");
+		}else{
+			String name = JOptionPane.showInputDialog(this, "Le délimiteur du fichier est \" \" et l'extension est .txt par défaut (modifiable dans File>Paramètres) "+
+			"\nSous quel nom voulez vous l'enregistrer ?");
+			try(FileWriter mapSaveFile = new FileWriter(new File("save/"+name+Config.extension))){
+				for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
+					for(int y = 0; y<TopMenuBar.tileM.map[x].length ; y++){
+						mapSaveFile.write(TopMenuBar.tileM.map[x][y] + Config.delimiter);
+					}
+					mapSaveFile.write(System.getProperty("line.separator"));
+				}
+			}catch(Exception e){
+				System.out.println("Erreur dans le save de la map " + e);
+			}
 		}
 	}
 

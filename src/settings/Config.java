@@ -9,5 +9,6 @@ public class Config {
 	public static int mapWidth = tileSize*nbCol, mapHeight = tileSize*nbRow;
 	public static File directoryOfTiles;
     public static String delimiter = " ";
+    public static String extension = ".txt";
     
 }
