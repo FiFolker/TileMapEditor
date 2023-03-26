@@ -18,6 +18,19 @@ public class TilesManager {
 		getTileImage();
 	}
 
+	public TilesManager(int[][] nMap) {
+		tiles = new ArrayList<>();
+		if(Config.directoryOfTiles != null){
+			getTileImage();
+		}
+		this.map = new int[Config.nbCol][];
+		for(int i = 0; i < nMap.length; i++){
+    		this.map[i] = nMap[i].clone();
+		}
+		
+		
+	}
+
 	/**
 	 * Permet de reload suivant la valeur du paramètres
 	 * @param who 1 = map, 2 = image et tiles<>
@@ -31,12 +44,10 @@ public class TilesManager {
 		}else{
 			System.out.println("Paramètres non définis, 1 ou 2 seulement");
 		}
-		
-		
-		
+			
 	}
 	
-	private void getTileImage() {
+	public void getTileImage() {
 		if(Config.directoryOfTiles != null){
 			filesOfTiles = Config.directoryOfTiles.listFiles();
 			try{

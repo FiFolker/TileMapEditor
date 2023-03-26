@@ -99,7 +99,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		if(TopMenuBar.tileM != null){
+		if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
 			for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
 				for(int y = 0; y<TopMenuBar.tileM.map[x].length ; y++){
 					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[x][y]).image, x*Config.tileSize, y*Config.tileSize, Config.tileSize, Config.tileSize, null);
