@@ -19,9 +19,11 @@ public class MenuBar extends JMenuBar{
 	public JMenu fileMenu, tilesMenu, sortTilesMenu;
 	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem;
 
-	public TilesManager tileM;
+	public static TilesManager tileM;
+	public TileEditorPanel TE;
 
-	public MenuBar(){
+	public MenuBar(TileEditorPanel TE){
+		this.TE = TE;
 		this.setPreferredSize(new Dimension(1080, 25));
 		fileMenu = new JMenu("Fichiers");
 
@@ -105,7 +107,9 @@ public class MenuBar extends JMenuBar{
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			Config.directoryOfTiles = chooser.getSelectedFile();
-			tileM = new TilesManager();
+			MenuBar.tileM = new TilesManager();
+			TE.TreeT.addTilesToJTree();
+			TE.jt.updateUI();
 			System.out.println(Config.directoryOfTiles);
 		} else {
 			System.out.println("No Selection ");

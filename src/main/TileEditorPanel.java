@@ -1,23 +1,43 @@
 package main;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import settings.Config;
 
-public class Draw extends JPanel implements Runnable{
+public class TileEditorPanel extends JPanel implements Runnable{
 
 	Thread drawThread;
 	MouseHandler mouseH = new MouseHandler();
-	MenuBar menuB = new MenuBar();
+	MenuBar menuB = new MenuBar(this);
+	TreeTiles TreeT = new TreeTiles();
+	public JTree jt = new JTree(TreeT.framework);
+	public int indexOfSelectedNode = 0;
+		
 
 	// FPS
 	int FPS = 25;
 
-	public void Draw(){
+	public TileEditorPanel(){
 		this.setFocusable(true);
+		jt.setPreferredSize(new Dimension(175, 720));
+		jt.addTreeSelectionListener(new TreeSelectionListener() {
+
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				indexOfSelectedNode = jt.getRowForPath(jt.getSelectionPath()) - 1;
+			}
+			
+		});
+		this.add(jt);
+		this.add(new JScrollPane(jt));
 	}
 
 
@@ -64,16 +84,26 @@ public class Draw extends JPanel implements Runnable{
 	}
 
 	public void update(){
+		if(MenuBar.tileM != null && MainFrame.mouseH.clicked){
+			int col = MainFrame.mouseH.x / Config.tileSize;
+			int row = MainFrame.mouseH.y / Config.tileSize;
+			MenuBar.tileM.map[col][row - 3] = indexOfSelectedNode;
+		}
 	}
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		if(mouseH.clicked){
-			g2.drawImage(menuB.tileM.tiles.get(0).image, mouseH.x, mouseH.y, null);
-			System.out.println("tryDraw");
+		if(MenuBar.tileM != null){
+			for(int x = 0; x<MenuBar.tileM.map.length ; x++){
+				for(int y = 0; y<MenuBar.tileM.map[x].length ; y++){
+					g2.drawImage(MenuBar.tileM.tiles.get(MenuBar.tileM.map[x][y]).image, x*Config.tileSize, y*Config.tileSize, null);
+				}
+			}
 		}
+		
+		
 
 		for(int x = 0; x < Config.nbCol; x++){
 			for(int y = 0; y < Config.nbRow; y++){

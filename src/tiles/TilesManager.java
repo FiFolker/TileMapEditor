@@ -10,9 +10,11 @@ import settings.Config;
 public class TilesManager {
     public ArrayList<Tile> tiles;
     File[] filesOfTiles;
+	public int[][] map;
 
     public TilesManager() {
         tiles = new ArrayList<>();
+		map = new int[Config.nbCol][Config.nbRow];
         if(Config.directoryOfTiles != null){
             filesOfTiles = Config.directoryOfTiles.listFiles();
             getTileImage();

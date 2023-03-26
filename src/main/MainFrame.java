@@ -5,11 +5,12 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-
 public class MainFrame {
 
+	public static MouseHandler mouseH = new MouseHandler();
 
     public static void main(String[] args) throws Exception {
+		TileEditorPanel TileEdit = new TileEditorPanel();
         JFrame window = new JFrame();
 		window.setTitle("Tile Map Editor");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,19 +18,19 @@ public class MainFrame {
 		window.setIconImage(ImageIO.read(new File("assets/icons/tiled.png")));
 		window.setPreferredSize(new Dimension(1080, 720));
 
-		window.setJMenuBar(new MenuBar());
-		window.addMouseListener(new MouseHandler());
-		window.addMouseMotionListener(new MouseHandler());
+		window.setJMenuBar(new MenuBar(TileEdit));
+		window.addMouseListener(mouseH);
+		window.addMouseMotionListener(mouseH);
 
-		Draw d = new Draw();
-		window.add(d);
+		
+		window.add(TileEdit);
 
 		window.pack();
 
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 
-		d.startGameThread();
+		TileEdit.startGameThread();
     }
 
 
