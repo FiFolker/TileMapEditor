@@ -18,7 +18,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	MouseHandler mouseH = new MouseHandler();
 	MenuBar menuB = new MenuBar(this);
 	TreeTiles TreeT = new TreeTiles();
-	public JTree jt = new JTree(TreeT.framework);
+	public JTree jt = new JTree(TreeT.listOfTiles);
 	public int indexOfSelectedNode = 0;
 		
 

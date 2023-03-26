@@ -8,12 +8,12 @@ import tiles.Tile;
 
 public class TreeTiles{
 
-	public DefaultMutableTreeNode framework = new DefaultMutableTreeNode("Framework");
+	public DefaultMutableTreeNode listOfTiles = new DefaultMutableTreeNode("Listes des Tiles");
 
 	public void addTilesToJTree(){
 		if(MenuBar.tileM != null){
 			for(Tile t : MenuBar.tileM.tiles){
-				this.framework.add(new DefaultMutableTreeNode(t.name));
+				this.listOfTiles.add(new DefaultMutableTreeNode(t.name));
 			}
 		}
 	}

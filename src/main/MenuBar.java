@@ -110,6 +110,7 @@ public class MenuBar extends JMenuBar{
 			MenuBar.tileM = new TilesManager();
 			TE.TreeT.addTilesToJTree();
 			TE.jt.updateUI();
+			
 			System.out.println(Config.directoryOfTiles);
 		} else {
 			System.out.println("No Selection ");
