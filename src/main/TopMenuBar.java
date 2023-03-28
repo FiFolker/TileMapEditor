@@ -26,6 +26,8 @@ public class TopMenuBar extends JMenuBar{
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
 
+	public static Dimension sizeOfTopMenuBar;
+
 	public TopMenuBar(TileEditorPanel TE){
 		this.TE = TE;
 		this.setPreferredSize(new Dimension(1080, 25));
@@ -67,8 +69,7 @@ public class TopMenuBar extends JMenuBar{
 
 		this.add(fileMenu);
 		this.add(tilesMenu);
-		
-
+		sizeOfTopMenuBar = getPreferredSize();
 	}
 
 	private void addActionListenerToJMenuItems(){ // add parameter with JMenuItems, arraylist of Items and add with for 

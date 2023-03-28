@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -18,8 +19,13 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	MouseHandler mouseH = new MouseHandler();
 	TopMenuBar menuB = new TopMenuBar(this);
 	TreeTiles TreeT = new TreeTiles(this);
+	Coordonnees mouseCasePos = new Coordonnees(0, 0);
 	public JTree jt = new JTree(TreeT.listOfTiles);
+
+
 	public int indexOfSelectedNode = 0;
+	int topLeftCorner = 0;
+	int topCorner = 0;
 		
 
 	// FPS
@@ -27,7 +33,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 	public TileEditorPanel(){
 		this.setFocusable(true);
-		jt.setPreferredSize(new Dimension(175, 720));
+		
+		jt.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height*2));
 		jt.addTreeSelectionListener(new TreeSelectionListener() {
 
 			@Override
@@ -40,7 +47,15 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			
 		});
 		this.add(jt);
-		this.add(new JScrollPane(jt));
+		JScrollPane scroll = new JScrollPane(jt);
+		scroll.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height - TopMenuBar.sizeOfTopMenuBar.height*2));
+		this.add(scroll);
+		this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+		topLeftCorner = jt.getPreferredSize().width+10;
+		topCorner = TopMenuBar.sizeOfTopMenuBar.height;
+		System.out.println(topLeftCorner);
+		System.out.println(topCorner);
 	}
 
 
@@ -67,6 +82,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			lastTime = currentTime;
 
 			if(delta >= 1){
+				
 				update();
 				repaint();
 				delta --;
@@ -75,23 +91,19 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			if(timer >= 1000000000){
 				timer = 0;
 			}
-			
-			
 
 		}
 
 	}
 
 	public void update(){
+		convertMousePosToBoardPos();
 		if(TopMenuBar.tileM != null && MainFrame.mouseH.clicked){
-			int col = MainFrame.mouseH.x / Config.tileSize;
-			int row = MainFrame.mouseH.y / Config.tileSize;
-			try{
-				TopMenuBar.tileM.map[col][row - 3] = indexOfSelectedNode;
-			}catch(Exception e){
-				System.out.println("Problème dans le set des tiles dans la map[][] " + e);
-			}
 			
+			if(mouseCasePos.isInGrid()){
+
+				TopMenuBar.tileM.map[mouseCasePos.line][mouseCasePos.column] = indexOfSelectedNode;
+			}
 		}
 	}
 
@@ -99,21 +111,31 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
-			for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
-				for(int y = 0; y<TopMenuBar.tileM.map[x].length ; y++){
-					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[x][y]).image, x*Config.tileSize, y*Config.tileSize, Config.tileSize, Config.tileSize, null);
-				}
-			}
-		}
-		
-		
-
+		int yTemp = topCorner;
 		for(int x = 0; x < Config.nbCol; x++){
-			for(int y = 0; y < Config.nbRow; y++){
-				g2.drawRect(x*Config.tileSize,y*Config.tileSize, Config.tileSize, Config.tileSize);
+			int xTemp = topLeftCorner;
+			for(int y = 0; y < Config.nbRow; y++){	
+				if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
+					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[x][y]).image, xTemp+Config.tileSize, yTemp+Config.tileSize, Config.tileSize, Config.tileSize, null);
+				}
+				g2.drawRect(xTemp+Config.tileSize, yTemp+Config.tileSize, Config.tileSize, Config.tileSize);
+				xTemp += Config.tileSize;
 			}
+			yTemp += Config.tileSize;
 		}
 	}
 	
+	public void convertMousePosToBoardPos() {
+        int x = (MainFrame.mouseH.x - 204) / Config.tileSize;
+        int y = (MainFrame.mouseH.y - 92) / Config.tileSize;
+        
+        mouseCasePos.line = y;
+        mouseCasePos.column = x;
+        
+        if (MainFrame.mouseH.x < 204 -10 || MainFrame.mouseH.y < 92 -10) {
+            mouseCasePos.line = -1;
+            mouseCasePos.column = -1;
+        }
+    }
+
 }
