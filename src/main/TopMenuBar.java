@@ -130,12 +130,9 @@ public class TopMenuBar extends JMenuBar{
 			String name = JOptionPane.showInputDialog(this, "Le délimiteur du fichier est \""+Config.delimiter+"\" et l'extension est "+Config.extension+"(modifiable dans File>Paramètres) "+
 			"\nSous quel nom voulez vous l'enregistrer ?");
 			try(FileWriter mapSaveFile = new FileWriter(new File("save/"+name+Config.extension))){
-				for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
-					for(int y = 0; y<TopMenuBar.tileM.map[x].length ; y++){
+				for(int y = 0; y<TopMenuBar.tileM.map[0].length ; y++){
+					for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
 						String tileValue = Integer.toString(TopMenuBar.tileM.map[x][y]) + Config.delimiter;
-						/*if(y < TopMenuBar.tileM.map[x].length-1){
-							tileValue += Config.delimiter;
-						}*/
 						mapSaveFile.write(tileValue);
 						//mapSaveFile.flush();
 					}

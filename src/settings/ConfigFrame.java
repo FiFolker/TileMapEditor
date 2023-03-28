@@ -69,16 +69,6 @@ public class ConfigFrame extends JFrame{
 		fieldOnlyIntMaxLengthListener(tileSizeTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbColTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbRowTextField, 3);
-		
-		delimiterTextField.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent ke) {
-				if (delimiterTextField.getText().length() >= 1) // limit textfield to maxLength characters
-				{
-					ke.consume();
-				}
-
-			}
-		});
 
 		configPanel.add(tileSizeInfo);
 		configPanel.add(tileSizeTextField);

@@ -21,6 +21,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	TreeTiles TreeT = new TreeTiles(this);
 	Coordonnees mouseCasePos = new Coordonnees(0, 0);
 	public JTree jt = new JTree(TreeT.listOfTiles);
+	boolean gridInMovement = false;
 
 
 	public int indexOfSelectedNode = 0;
@@ -98,12 +99,17 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 	public void update(){
 		convertMousePosToBoardPos();
-		if(TopMenuBar.tileM != null && MainFrame.mouseH.clicked){
+		if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 			
 			if(mouseCasePos.isInGrid()){
 
 				TopMenuBar.tileM.map[mouseCasePos.line][mouseCasePos.column] = indexOfSelectedNode;
 			}
+		}
+
+		if(MainFrame.mouseH.middleClicked){
+			topLeftCorner = MainFrame.mouseH.x;
+			topCorner = MainFrame.mouseH.y - 3*Config.tileSize;
 		}
 	}
 
@@ -111,28 +117,24 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		int yTemp = topCorner;
-		for(int x = 0; x < Config.nbCol; x++){
-			int xTemp = topLeftCorner;
-			for(int y = 0; y < Config.nbRow; y++){	
+		for(int x = topLeftCorner; x < Config.mapWidth + topLeftCorner; x+= Config.tileSize){
+			for(int y = topCorner; y < Config.mapHeight + topCorner; y+= Config.tileSize){	
 				if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
-					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[x][y]).image, xTemp+Config.tileSize, yTemp+Config.tileSize, Config.tileSize, Config.tileSize, null);
+					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[(x-topLeftCorner)/Config.tileSize][(y-topCorner)/Config.tileSize]).image, x, y, Config.tileSize, Config.tileSize, null);
 				}
-				g2.drawRect(xTemp+Config.tileSize, yTemp+Config.tileSize, Config.tileSize, Config.tileSize);
-				xTemp += Config.tileSize;
+				g2.drawRect(x, y, Config.tileSize, Config.tileSize);
 			}
-			yTemp += Config.tileSize;
 		}
 	}
 	
 	public void convertMousePosToBoardPos() {
-        int x = (MainFrame.mouseH.x - 204) / Config.tileSize;
-        int y = (MainFrame.mouseH.y - 92) / Config.tileSize;
+        int x = (MainFrame.mouseH.x - topLeftCorner) / Config.tileSize;
+        int y = (MainFrame.mouseH.y - topCorner) / Config.tileSize;
         
-        mouseCasePos.line = y;
-        mouseCasePos.column = x;
+        mouseCasePos.line = x;
+        mouseCasePos.column = y - 3;
         
-        if (MainFrame.mouseH.x < 204 -10 || MainFrame.mouseH.y < 92 -10) {
+        if (MainFrame.mouseH.x < topLeftCorner - 10 || MainFrame.mouseH.y < topCorner  -10) {
             mouseCasePos.line = -1;
             mouseCasePos.column = -1;
         }
