@@ -35,6 +35,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
 		
+		
 		jt.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height*2));
 		jt.addTreeSelectionListener(new TreeSelectionListener() {
 
@@ -115,6 +116,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				System.out.println("Zoom In");
 				MainFrame.mouseH.wheel = 0;
 			}
+			this.grabFocus();
 		}
 
 
