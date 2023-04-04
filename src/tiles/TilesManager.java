@@ -56,7 +56,10 @@ public class TilesManager {
 
 					tiles.get(i).image = ImageIO.read(filesOfTiles[i]);
 
-					tiles.get(i).name = filesOfTiles[i].getName().substring(3);
+					tiles.get(i).name = filesOfTiles[i].getName();
+					/*if(tiles.get(i).name.contains("[0-9]")){ A voir si check s'il y a un nombre alors substring a partir de lui
+						tiles.get(i).name = tiles.get(i).name.substring(tiles.get(i).name.lastIndexOf("[0-9]"));
+					}*/
 					//tiles.get(i).collision = filesOfTiles[i].getName().contains("#"); A VOIR POUR SET DES COLLISIONS ICI DIRECTEMENT
 				}
 			}catch(Exception ex){

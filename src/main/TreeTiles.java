@@ -17,9 +17,11 @@ public class TreeTiles{
 	public void addTilesToJTree(){
 		if(TopMenuBar.tileM != null){
 			this.listOfTiles.removeAllChildren();
+			//int i = 0;
 			TE.indexOfSelectedNode = 0;
 			for(Tile t : TopMenuBar.tileM.tiles){
-				this.listOfTiles.add(new DefaultMutableTreeNode(t.name));
+				this.listOfTiles.add(new DefaultMutableTreeNode(t.name)); // i + " - " +  si substrint dans TileManager
+				//i++;
 			}
 		}
 	}

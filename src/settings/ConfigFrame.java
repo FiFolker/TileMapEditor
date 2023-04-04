@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import main.TileEditorPanel;
 import main.TopMenuBar;
 
 public class ConfigFrame extends JFrame{
@@ -36,9 +39,13 @@ public class ConfigFrame extends JFrame{
 
 	JButton okButton = new JButton("Valider");
 	JButton cancelButton = new JButton("Annuler");
+
+	public TileEditorPanel TE;
 	
 	
-	public ConfigFrame(){
+	public ConfigFrame(TileEditorPanel nTE){
+		this.TE = nTE;
+		TE.menuB.configFrameState = true;
 		configWindow = new JFrame();
 		configWindow.setTitle("Configuration");
 		configWindow.setResizable(false);
@@ -51,6 +58,13 @@ public class ConfigFrame extends JFrame{
 			e.printStackTrace();
 		}
 		configWindow.setPreferredSize(new Dimension(640, 480));
+
+		configWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				TE.menuB.configFrameState = false;
+			}
+		});
 
 		configWindow.add(setConfigPanel());
 		setButtonActionListener();

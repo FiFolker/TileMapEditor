@@ -20,11 +20,14 @@ import settings.ConfigFrame;
 import tiles.TilesManager;
 
 public class TopMenuBar extends JMenuBar{
-	public JMenu fileMenu, tilesMenu, sortTilesMenu;
-	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem, newMapItem;
+	public JMenu fileMenu, tilesMenu, sortTilesMenu, viewMenu;
+	public JMenuItem loadMapItem, saveMapItem, saveMapAsItem,leaveItem, loadTilesFolderItem,
+	 loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem, newMapItem, showGridItem;
 
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
+
+	public boolean configFrameState = false;
 
 	public static Dimension sizeOfTopMenuBar;
 
@@ -35,7 +38,8 @@ public class TopMenuBar extends JMenuBar{
 
 		newMapItem = new JMenuItem("Nouvelle Map");
 		loadMapItem = new JMenuItem("Charger Map");
-		saveMapItem = new JMenuItem("Sauvegarder Map");
+		saveMapAsItem = new JMenuItem("Sauvegarder sous (CTRL + S)");
+		saveMapItem = new JMenuItem("Sauvegarder (CTRL + S)");
 		configItem = new JMenuItem("Paramètres");
 		helpItem = new JMenuItem("Aide");
 		leaveItem = new JMenuItem("Quitter");
@@ -66,42 +70,65 @@ public class TopMenuBar extends JMenuBar{
 		sortTilesMenu.add(sortByNumberItem);
 		sortTilesMenu.add(sortByOriginalItem);
 
+		viewMenu = new JMenu("Vue");
+
+		showGridItem = new JMenuItem("Afficher / Cacher la grille (G)");
+
+		viewMenu.add(showGridItem);
 
 		addActionListenerToJMenuItems();
 
 		this.add(fileMenu);
 		this.add(tilesMenu);
+		this.add(viewMenu);
 		sizeOfTopMenuBar = getPreferredSize();
 	}
 
 	private void addActionListenerToJMenuItems(){ // add parameter with JMenuItems, arraylist of Items and add with for 
-		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMapItem(evt); }});
+		// FILES
+		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMapItemAction(evt); }});
 		loadMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadMapItemAction(evt); }});
 		saveMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapItemAction(evt); }});
+		saveMapAsItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapAsItemAction(evt); }});
 		configItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { configItemAction(evt); }});
 		helpItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { helpItemAction(evt); }});
 		leaveItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { System.exit(0); }});
+
+		// TILES
 		loadTilesFolderItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesFolderItemAction(evt); }});
 		loadTilesMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesMapItemAction(evt); }});
 		sortByNumberItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { sortByNumberItemAction(evt); }});
 		sortByOriginalItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { sortByOriginalItemAction(evt); }});
 
+		// VIEW
+		showGridItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { showGridItemAction(evt); }});
 		
 		
 	}
 
-	protected void newMapItem(ActionEvent evt) {
-		tileM = null;
-		TE.TreeT.listOfTiles.removeAllChildren();
-		TE.jt.collapseRow(0);
-		Config.resetConfig();
+	protected void showGridItemAction(ActionEvent evt) {
+		TE.keyH.gridState = !TE.keyH.gridState;
+	}
+
+	protected void saveMapAsItemAction(ActionEvent evt) {
+	}
+
+	protected void newMapItemAction(ActionEvent evt) {
+		int res = confirmMessage();
+		if(res == JOptionPane.YES_OPTION){
+			tileM = null;
+			TE.TreeT.listOfTiles.removeAllChildren();
+			TE.jt.collapseRow(0);
+			Config.resetConfig();
+		}
+		
 	}
 
 	protected void helpItemAction(ActionEvent evt) {
 	}
 
 	protected void configItemAction(ActionEvent evt) {
-		ConfigFrame cF = new ConfigFrame();
+		new ConfigFrame(TE);
 	}
 
 	protected void sortByOriginalItemAction(ActionEvent evt) {
@@ -134,6 +161,10 @@ public class TopMenuBar extends JMenuBar{
    
 
 	protected void saveMapItemAction(ActionEvent evt) {
+		saveMap();
+	}
+
+	public void saveMap(){
 		if(TopMenuBar.tileM == null){
 			System.out.println("Il faut avoir fait une map pour pouvoir la save");
 		}else{
@@ -166,6 +197,10 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	private int[][] loadMap(File currentFile) { // rajouter un showDialog avec demande du délimiteur
+		String currDelimiter = JOptionPane.showInputDialog(TE, "Quel est le délimiteur de votre map : ", "Choix du délimiteur", JOptionPane.DEFAULT_OPTION);
+		if(currDelimiter.isEmpty()){
+			currDelimiter = Config.delimiter;
+		}
 		int col = countCol(currentFile);
 		int row = countRow(currentFile);
 
@@ -174,19 +209,19 @@ public class TopMenuBar extends JMenuBar{
 		int x;
 		int y;
 		try(Scanner scan = new Scanner(currentFile)){
-			String[] split = scan.nextLine().split(Config.delimiter);
+			String[] split = scan.nextLine().split(currDelimiter);
 			y = 0;
 			
 			while(scan.hasNextLine()){
 				x = 0;
 				for(int i = 0; i<split.length; i++){
-					if(!Objects.equals(split[i], Config.delimiter)){
+					if(!Objects.equals(split[i], currDelimiter)){
 						mapLoaded[x][y] = Integer.parseInt(split[i]);
 						x++;
 					}
 				}
 				y++;
-				split = scan.nextLine().split(Config.delimiter);
+				split = scan.nextLine().split(currDelimiter);
 			}
 				
 		}catch(Exception e){
@@ -195,6 +230,7 @@ public class TopMenuBar extends JMenuBar{
 		}
 		Config.nbCol = col;
 		Config.nbRow = row;
+		Config.calculMapSize();
 		return mapLoaded;
 	}
 
@@ -246,6 +282,10 @@ public class TopMenuBar extends JMenuBar{
 		chooser.setAcceptAllFileFilterUsed(false);
 
 		return chooser;
+	}
+
+	public int confirmMessage(){
+		return JOptionPane.showConfirmDialog(TE, "La map va être remis à 0 si vous effectuez cette action êtes vous sûr de vous ?", "Demande de confirmation", JOptionPane.YES_NO_OPTION);
 	}
 
 
