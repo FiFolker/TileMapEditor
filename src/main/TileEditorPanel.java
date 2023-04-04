@@ -16,7 +16,6 @@ import settings.Config;
 public class TileEditorPanel extends JPanel implements Runnable{
 
 	Thread drawThread;
-	MouseHandler mouseH = new MouseHandler();
 	TopMenuBar menuB = new TopMenuBar(this);
 	TreeTiles TreeT = new TreeTiles(this);
 	Coordonnees mouseCasePos = new Coordonnees(0, 0);
@@ -27,13 +26,14 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	public int indexOfSelectedNode = 0;
 	int topLeftCorner = 0;
 	int topCorner = 0;
-		
+	KeyHandler keyH = new KeyHandler();
 
 	// FPS
 	int FPS = 25;
 
 	public TileEditorPanel(){
 		this.setFocusable(true);
+		this.addKeyListener(keyH);
 		
 		jt.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height*2));
 		jt.addTreeSelectionListener(new TreeSelectionListener() {
@@ -107,9 +107,27 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			}
 		}
 
-		if(MainFrame.mouseH.middleClicked){
-			topLeftCorner = MainFrame.mouseH.x;
-			topCorner = MainFrame.mouseH.y - 3*Config.tileSize;
+		if(keyH.moveUp){
+			System.out.println("Déplacement Haut !");
+		}
+		if(keyH.moveRight){
+			System.out.println("Déplacement Droite !");
+		}
+		if(keyH.moveLeft){
+			System.out.println("Déplacement Gauche !");
+		}
+		if(keyH.moveDown){
+			System.out.println("Déplacement Bas !");
+		}
+		if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.tileSize >= 8){
+			Config.tileSize --;
+			MainFrame.mouseH.wheel = 0;
+			//Config.calculMapSize();
+		}
+		else if(MainFrame.mouseH.wheel < 0 && keyH.ctrlPressed && Config.tileSize <= 64){
+			Config.tileSize ++;
+			MainFrame.mouseH.wheel = 0;
+			//Config.calculMapSize();
 		}
 	}
 
@@ -117,8 +135,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 
-		for(int x = topLeftCorner; x < Config.mapWidth + topLeftCorner; x+= Config.tileSize){
-			for(int y = topCorner; y < Config.mapHeight + topCorner; y+= Config.tileSize){	
+		for(int x = topLeftCorner; x < Config.gridWidht + topLeftCorner; x+= Config.tileSize){
+			for(int y = topCorner; y < Config.gridHeight + topCorner; y+= Config.tileSize){	
 				if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
 					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[(x-topLeftCorner)/Config.tileSize][(y-topCorner)/Config.tileSize]).image, x, y, Config.tileSize, Config.tileSize, null);
 				}
@@ -128,11 +146,11 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	}
 	
 	public void convertMousePosToBoardPos() {
-        int x = (MainFrame.mouseH.x - topLeftCorner) / Config.tileSize;
-        int y = (MainFrame.mouseH.y - topCorner) / Config.tileSize;
+        int x = (MainFrame.mouseH.x - topLeftCorner - 10) / Config.tileSize; // 10 = marge du bord
+        int y = (MainFrame.mouseH.y - topCorner - 50) / Config.tileSize; // 50 = marge du haut
         
         mouseCasePos.line = x;
-        mouseCasePos.column = y - 3;
+        mouseCasePos.column = y;
         
         if (MainFrame.mouseH.x < topLeftCorner - 10 || MainFrame.mouseH.y < topCorner  -10) {
             mouseCasePos.line = -1;

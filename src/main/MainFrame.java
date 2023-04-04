@@ -1,16 +1,21 @@
 package main;
 import java.awt.Dimension;
-import java.awt.Menu;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
 public class MainFrame {
 
 	public static MouseHandler mouseH = new MouseHandler();
 	public static Dimension sizeOfWindow;
 
     public static void main(String[] args) throws Exception {
+		FlatLightLaf.setup();
+		UIManager.setLookAndFeel(new FlatLightLaf());
+
         JFrame window = new JFrame();
 
 		window.setTitle("Tile Map Editor");
@@ -24,6 +29,7 @@ public class MainFrame {
 		window.setJMenuBar(new TopMenuBar(TileEdit));
 		window.addMouseListener(mouseH);
 		window.addMouseMotionListener(mouseH);
+		window.addMouseWheelListener(mouseH);
 		
 
 		window.add(TileEdit);

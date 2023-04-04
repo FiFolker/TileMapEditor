@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import main.TopMenuBar;
-import tiles.TilesManager;
 
 public class ConfigFrame extends JFrame{
 
@@ -102,6 +101,7 @@ public class ConfigFrame extends JFrame{
 				Config.mapHeight = Config.nbRow*Config.tileSize;
 				Config.mapWidth = Config.nbCol*Config.tileSize;
 				if(TopMenuBar.tileM != null){
+					
 					TopMenuBar.tileM.reloadMap();
 				}
 				
