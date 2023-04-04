@@ -144,8 +144,13 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
 					g2.drawImage(TopMenuBar.tileM.tiles.get(TopMenuBar.tileM.map[(x-topLeftCorner)/Config.tileSize][(y-topCorner)/Config.tileSize]).image, x, y, Config.tileSize, Config.tileSize, null);
 				}
-				g2.drawRect(x, y, Config.tileSize, Config.tileSize);
+				if(keyH.gridState){
+					g2.drawRect(x, y, Config.tileSize, Config.tileSize);
+				}
 			}
+		}
+		if(!keyH.gridState){
+			g2.drawRect(topLeftCorner, topCorner, Config.gridWidth, Config.gridHeight);
 		}
 		g2.drawString("Colonne : " + mouseCasePos.column, 200, 650);
 		g2.drawString("Ligne : " + mouseCasePos.line, 275, 650);
