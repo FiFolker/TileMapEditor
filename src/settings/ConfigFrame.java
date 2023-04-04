@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -24,9 +25,6 @@ import main.TopMenuBar;
 public class ConfigFrame extends JFrame{
 
 	JFrame configWindow;
-
-	JLabel tileSizeInfo = new JLabel("Taille d'un tile : ");
-	JTextField tileSizeTextField = new JTextField(Integer.toString(Config.tileSize), 6);
 
 	JLabel nbColInfo = new JLabel("Nombre de colonnes : ");
 	JTextField nbColTextField = new JTextField(Integer.toString(Config.nbCol), 6);
@@ -79,13 +77,9 @@ public class ConfigFrame extends JFrame{
 	public JPanel setConfigPanel(){
 		JPanel configPanel = new JPanel();
 
-		fieldOnlyIntMaxLengthListener(tileSizeTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbColTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbRowTextField, 3);
 
-		configPanel.add(tileSizeInfo);
-		configPanel.add(tileSizeTextField);
-		
 		configPanel.add(nbColInfo);
 		configPanel.add(nbColTextField);
 
@@ -105,22 +99,27 @@ public class ConfigFrame extends JFrame{
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int newTileSize = Integer.parseInt(tileSizeTextField.getText());
 				int newNbCol = Integer.parseInt(nbColTextField.getText());
 				int newNbRow = Integer.parseInt(nbRowTextField.getText());
 
-				Config.tileSize = newTileSize;	
-				Config.nbCol = newNbCol;
-				Config.nbRow = newNbRow;
-				Config.mapHeight = Config.nbRow*Config.tileSize;
-				Config.mapWidth = Config.nbCol*Config.tileSize;
-				if(TopMenuBar.tileM != null){
-					
-					TopMenuBar.tileM.reloadMap();
+				if(Config.nbCol != newNbCol || Config.nbRow != newNbRow){
+					int res = TopMenuBar.confirmMessage(TE);
+					if(res == JOptionPane.YES_OPTION){
+						Config.nbCol = newNbCol;
+						Config.nbRow = newNbRow;
+						Config.calculMapSize();
+						if(TopMenuBar.tileM != null){
+							
+							TopMenuBar.tileM.reloadMap();
+						}
+					}else if (res ==JOptionPane.NO_OPTION){
+						configWindow.dispose();
+						new ConfigFrame(TE);
+					}
 				}
-				
 				Config.delimiter = delimiterTextField.getText();
 				configWindow.dispose();
+				
 			}
 
 		});

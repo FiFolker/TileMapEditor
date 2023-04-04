@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import settings.Config;
 import settings.ConfigFrame;
@@ -114,7 +115,7 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void newMapItemAction(ActionEvent evt) {
-		int res = confirmMessage();
+		int res = confirmMessage(TE);
 		if(res == JOptionPane.YES_OPTION){
 			tileM = null;
 			TE.TreeT.listOfTiles.removeAllChildren();
@@ -302,7 +303,7 @@ public class TopMenuBar extends JMenuBar{
 		return chooser;
 	}
 
-	public int confirmMessage(){
+	public static int confirmMessage(JPanel TE){
 		return JOptionPane.showConfirmDialog(TE, "La map va être remis à 0 si vous effectuez cette action êtes vous sûr de vous ?", "Demande de confirmation", JOptionPane.YES_NO_OPTION);
 	}
 
