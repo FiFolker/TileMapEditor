@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.concurrent.locks.Condition;
@@ -181,9 +182,14 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				
 			}
 		}
-		
+		g2.setFont(new Font("arial", Font.BOLD, 13));
+		if(TopMenuBar.tileM != null){
+			g2.drawString("Tiles séléctionné : ", 200, 615);
+			g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, 320, 600, 24, 24, null);
+			g2.drawString(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).name, 350, 615);
+		}
 		g2.drawString("Colonne : " + mouseCasePos.column, 200, 650);
-		g2.drawString("Ligne : " + mouseCasePos.line, 275, 650);
+		g2.drawString("Ligne : " + mouseCasePos.line, 285, 650);
 	}
 	
 	public void convertMousePosToBoardPos() {
