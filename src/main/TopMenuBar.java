@@ -21,7 +21,7 @@ import tiles.TilesManager;
 
 public class TopMenuBar extends JMenuBar{
 	public JMenu fileMenu, tilesMenu, sortTilesMenu;
-	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem;
+	public JMenuItem loadMapItem, saveMapItem, leaveItem, loadTilesFolderItem, loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem, newMapItem;
 
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
@@ -33,12 +33,14 @@ public class TopMenuBar extends JMenuBar{
 		this.setPreferredSize(new Dimension(1080, 25));
 		fileMenu = new JMenu("Fichiers");
 
+		newMapItem = new JMenuItem("Nouvelle Map");
 		loadMapItem = new JMenuItem("Charger Map");
 		saveMapItem = new JMenuItem("Sauvegarder Map");
 		configItem = new JMenuItem("Paramètres");
 		helpItem = new JMenuItem("Aide");
 		leaveItem = new JMenuItem("Quitter");
 
+		fileMenu.add(newMapItem);
 		fileMenu.add(loadMapItem);
 		fileMenu.add(saveMapItem);
 		fileMenu.add(configItem);
@@ -73,6 +75,7 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	private void addActionListenerToJMenuItems(){ // add parameter with JMenuItems, arraylist of Items and add with for 
+		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMapItem(evt); }});
 		loadMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadMapItemAction(evt); }});
 		saveMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapItemAction(evt); }});
 		configItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { configItemAction(evt); }});
@@ -85,6 +88,13 @@ public class TopMenuBar extends JMenuBar{
 
 		
 		
+	}
+
+	protected void newMapItem(ActionEvent evt) {
+		tileM = null;
+		TE.TreeT.listOfTiles.removeAllChildren();
+		TE.jt.collapseRow(0);
+		Config.resetConfig();
 	}
 
 	protected void helpItemAction(ActionEvent evt) {

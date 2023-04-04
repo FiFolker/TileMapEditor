@@ -22,8 +22,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	public void mouseMoved(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
-		System.out.println("x : " + MainFrame.mouseH.x);
-		System.out.println("y : " + MainFrame.mouseH.y);
+		//System.out.println("x : " + MainFrame.mouseH.x);
+		//System.out.println("y : " + MainFrame.mouseH.y);
 	}
 	
 	@Override
@@ -77,7 +77,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		wheel = e.getWheelRotation();
-		System.out.println(wheel);
 	}
 
 	

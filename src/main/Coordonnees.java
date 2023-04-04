@@ -14,8 +14,8 @@ public class Coordonnees {
     }
 
     boolean isInGrid(){
-        return 0 <= line && line < Config.nbRow 
-        && 0 <= column && column < Config.nbCol;
+        return line >= 0 && line < Config.nbRow 
+        && column >= 0 && column < Config.nbCol;
 
     }
 }
