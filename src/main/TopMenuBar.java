@@ -142,8 +142,14 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void loadTilesFolderItemAction(ActionEvent evt) {
+		loadTilesFolder();
+	}
+
+	public void loadTilesFolder(){
 		JFileChooser chooser = fileChooser("Dossier de Tiles", 1);
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			// ajouter vérification si pas de fichiers ou que des dossiers a voir 
+			//  chooser.getSelectedFile().listFiles().length != 0
 			Config.directoryOfTiles = chooser.getSelectedFile();
 			if(TopMenuBar.tileM != null && TopMenuBar.tileM.tiles.isEmpty()){
 				TopMenuBar.tileM.getTileImage();
@@ -187,16 +193,28 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void loadMapItemAction(ActionEvent event) {
-		JFileChooser chooser = fileChooser("Fichier de map", 2);
-		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			int[][] mapLoaded = loadMap(chooser.getSelectedFile());
-			TopMenuBar.tileM = new TilesManager(mapLoaded);
-		} else {
-			System.out.println("No Selection ");
+		boolean tilesSelected = true;
+		if(Config.directoryOfTiles == null){
+			JOptionPane.showMessageDialog(TE, "Vous devez choisir un fichier de tiles pour charger votre map !");
+			loadTilesFolder();
 		}
+		tilesSelected = tileM != null;
+		if(tilesSelected){
+			JFileChooser chooser = fileChooser("Fichier de map", 2);
+			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				int[][] mapLoaded = loadMap(chooser.getSelectedFile());
+				TopMenuBar.tileM = new TilesManager(mapLoaded);
+			} else {
+				System.out.println("No Selection ");
+			}
+		}else{
+			JOptionPane.showMessageDialog(TE, "Vous n'avez pas séléctionné de fichier de tiles ! Impossible de charger la map", "Erreur !", JOptionPane.WARNING_MESSAGE);
+		}
+		
 	}
 
-	private int[][] loadMap(File currentFile) { // rajouter un showDialog avec demande du délimiteur
+	private int[][] loadMap(File currentFile) { 
+		
 		String currDelimiter = JOptionPane.showInputDialog(TE, "Quel est le délimiteur de votre map : ", "Choix du délimiteur", JOptionPane.DEFAULT_OPTION);
 		if(currDelimiter.isEmpty()){
 			currDelimiter = Config.delimiter;

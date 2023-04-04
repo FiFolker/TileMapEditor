@@ -22,13 +22,13 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	TreeTiles TreeT = new TreeTiles(this);
 	Coordonnees mouseCasePos = new Coordonnees(0, 0);
 	public JTree jt = new JTree(TreeT.listOfTiles);
-	boolean gridInMovement = false;
-
+	KeyHandler keyH = new KeyHandler();
 
 	public int indexOfSelectedNode = 0;
 	int topLeftCorner = 0;
 	int topCorner = 0;
-	KeyHandler keyH = new KeyHandler();
+	int shiftHorizontal = 0; // + = right - = left
+	int shiftVertical = 0; // + = top - = bottom
 
 	// FPS
 	int FPS = 25;
@@ -108,7 +108,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 				try{
-					TopMenuBar.tileM.map[mouseCasePos.column][mouseCasePos.line] = indexOfSelectedNode;
+					TopMenuBar.tileM.map[mouseCasePos.column + shiftHorizontal][mouseCasePos.line + shiftVertical] = indexOfSelectedNode;
 				}catch(Exception e){
 					System.out.println("Erreur dans la pose du tiles : " + e);
 				}
@@ -129,19 +129,29 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			menuB.saveMap();
 			keyH.save = false;
 		}
-
-		if(keyH.moveUp){
-			System.out.println("Déplacement Haut !");
+		if(TopMenuBar.tileM != null){
+			if(keyH.moveUp){
+				shiftVertical ++;
+				System.out.println("Déplacement Haut !");
+				keyH.moveUp = false;
+			}
+			if(keyH.moveRight){
+				shiftHorizontal --;
+				System.out.println("Déplacement Droite !");
+				keyH.moveRight = false;
+			}
+			if(keyH.moveLeft){
+				shiftHorizontal ++;
+				System.out.println("Déplacement Gauche !");
+				keyH.moveLeft = false;
+			}
+			if(keyH.moveDown && !keyH.ctrlPressed){
+				shiftVertical --;
+				System.out.println("Déplacement Bas !");
+				keyH.moveDown = false;
+			}
 		}
-		if(keyH.moveRight){
-			System.out.println("Déplacement Droite !");
-		}
-		if(keyH.moveLeft){
-			System.out.println("Déplacement Gauche !");
-		}
-		if(keyH.moveDown && !keyH.ctrlPressed){
-			System.out.println("Déplacement Bas !");
-		}
+		
 		
 	}
 
@@ -157,6 +167,11 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				if(posX >= topLeftCorner && posX <= Config.gridWidth + topLeftCorner && posY >= topCorner && posY <= Config.gridHeight + topCorner){
 					if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
 						int tilesValue = TopMenuBar.tileM.map[x][y];
+						if(x+shiftHorizontal < TopMenuBar.tileM.map.length && x+shiftHorizontal > 0 
+						&& y+shiftVertical < TopMenuBar.tileM.map[x].length && y+shiftVertical > 0){
+							tilesValue = TopMenuBar.tileM.map[x+shiftHorizontal][y+shiftVertical];
+						}
+						
 						g2.drawImage(TopMenuBar.tileM.tiles.get(tilesValue).image, posX, posY, Config.tileSize, Config.tileSize, null);
 					}
 					if(keyH.gridState){
@@ -166,9 +181,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				
 			}
 		}
-		if(!keyH.gridState){
-			//g2.drawRect(topLeftCorner, topCorner, Config.nbCol*Config.tileSize, Config.nbRow*Config.tileSize);
-		}
+		
 		g2.drawString("Colonne : " + mouseCasePos.column, 200, 650);
 		g2.drawString("Ligne : " + mouseCasePos.line, 275, 650);
 	}
