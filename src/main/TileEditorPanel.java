@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.concurrent.locks.Condition;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -101,12 +102,16 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 	public void update(){
 		convertMousePosToBoardPos();
-		if(MainFrame.mouseH.leftClicked){
+		if(MainFrame.mouseH.leftClicked && !this.hasFocus()){
 			this.requestFocusInWindow();
 		}
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
-				TopMenuBar.tileM.map[mouseCasePos.column][mouseCasePos.line] = indexOfSelectedNode;
+				try{
+					TopMenuBar.tileM.map[mouseCasePos.column][mouseCasePos.line] = indexOfSelectedNode;
+				}catch(Exception e){
+					System.out.println("Erreur dans la pose du tiles : " + e);
+				}
 			}
 			
 			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize < Config.nbCol && Config.gridHeight/Config.tileSize < Config.nbRow){
@@ -140,6 +145,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		
 	}
 
+	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
@@ -161,7 +167,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			}
 		}
 		if(!keyH.gridState){
-			g2.drawRect(topLeftCorner, topCorner, Config.gridWidth, Config.gridHeight);
+			//g2.drawRect(topLeftCorner, topCorner, Config.nbCol*Config.tileSize, Config.nbRow*Config.tileSize);
 		}
 		g2.drawString("Colonne : " + mouseCasePos.column, 200, 650);
 		g2.drawString("Ligne : " + mouseCasePos.line, 275, 650);
@@ -173,7 +179,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		
 		mouseCasePos.line = y;
 		mouseCasePos.column = x;
-		if (x < 0 || x > Config.nbCol || y < 0 || y > Config.nbRow) {
+		if (MainFrame.mouseH.x < topLeftCorner+10 || x > Config.gridWidth/Config.tileSize || MainFrame.mouseH.y < topCorner+56 || y > Config.gridHeight/Config.tileSize) {
 			mouseCasePos.line = -1;
 			mouseCasePos.column = -1;
 		}
