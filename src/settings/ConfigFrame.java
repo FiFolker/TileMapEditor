@@ -12,13 +12,19 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+
+import main.MainFrame;
 import main.TileEditorPanel;
 import main.TopMenuBar;
 
@@ -34,6 +40,11 @@ public class ConfigFrame extends JFrame{
 
 	JLabel delimiterInfo = new JLabel("Délimiteur : ");
 	JTextField delimiterTextField = new JTextField(Config.delimiter,3);
+
+	JLabel themeInfo = new JLabel("Thème : ");
+	JRadioButton lightThemeRadio = new JRadioButton("Thème clair");
+	JRadioButton darkThemeRadio = new JRadioButton("Thème sombre");
+	JRadioButton darculaThemeRadio = new JRadioButton("Thème Darcula");
 
 	JButton okButton = new JButton("Valider");
 	JButton cancelButton = new JButton("Annuler");
@@ -64,9 +75,21 @@ public class ConfigFrame extends JFrame{
 			}
 		});
 
+		switch(Config.theme){
+			case MainFrame.lightTheme:
+				lightThemeRadio.setSelected(true);
+				break;
+			case MainFrame.darkTheme:
+				darkThemeRadio.setSelected(true);
+				break;
+			case MainFrame.darculaTheme:
+				darculaThemeRadio.setSelected(true);
+				break;
+		}
+
 		configWindow.add(setConfigPanel());
 		setButtonActionListener();
-
+		
 		configWindow.pack();
 
 		configWindow.setLocationRelativeTo(null);
@@ -88,6 +111,16 @@ public class ConfigFrame extends JFrame{
 
 		configPanel.add(delimiterInfo);
 		configPanel.add(delimiterTextField);
+
+		configPanel.add(themeInfo);
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(lightThemeRadio);
+		bg.add(darkThemeRadio);
+		bg.add(darculaThemeRadio);
+		configPanel.add(lightThemeRadio);
+		configPanel.add(darkThemeRadio);
+		configPanel.add(darculaThemeRadio);
+		
 
 		configPanel.add(okButton);
 		configPanel.add(cancelButton);
@@ -112,10 +145,26 @@ public class ConfigFrame extends JFrame{
 							
 							TopMenuBar.tileM.reloadMap();
 						}
-					}else if (res ==JOptionPane.NO_OPTION){
-						configWindow.dispose();
-						new ConfigFrame(TE);
 					}
+				}
+
+				if(darkThemeRadio.isSelected()){
+					Config.theme = MainFrame.darkTheme;
+				}
+				else if(lightThemeRadio.isSelected()){
+					Config.theme = MainFrame.lightTheme;
+				}
+				else if(darculaThemeRadio.isSelected()){
+					Config.theme = MainFrame.darculaTheme;
+				}
+
+				try {
+					UIManager.setLookAndFeel(Config.theme);
+					SwingUtilities.updateComponentTreeUI(configWindow);
+					SwingUtilities.updateComponentTreeUI(MainFrame.window);
+				} catch (Exception e1) {
+					System.out.println("Erreur dans le changement de thème : " + e1);
+					e1.printStackTrace();
 				}
 				Config.delimiter = delimiterTextField.getText();
 				configWindow.dispose();

@@ -2,6 +2,12 @@ package settings;
 
 import java.io.File;
 
+import javax.swing.LookAndFeel;
+
+import com.formdev.flatlaf.FlatIntelliJLaf;
+
+import main.MainFrame;
+
 public class Config {
 
     public static int tileSize = 24;
@@ -11,6 +17,7 @@ public class Config {
 	public static File directoryOfTiles;
     public static String delimiter = " ";
     public static String extension = ".txt";
+    public static String theme = MainFrame.lightTheme;
 
     public static void calculMapSize(){
         Config.mapWidth = tileSize*nbCol;

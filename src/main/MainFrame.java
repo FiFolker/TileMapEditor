@@ -6,17 +6,31 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+
+import settings.Config;
 public class MainFrame {
 
 	public static MouseHandler mouseH = new MouseHandler();
 	public static Dimension sizeOfWindow;
+	public static final String darculaTheme = "com.formdev.flatlaf.FlatDarculaLaf";
+	public static final String darkTheme = "com.formdev.flatlaf.FlatDarkLaf";
+	public static final String lightTheme = "com.formdev.flatlaf.FlatIntelliJLaf";
+	public static JFrame window;
 
     public static void main(String[] args) throws Exception {
-		FlatLightLaf.setup();
-		UIManager.setLookAndFeel(new FlatLightLaf());
+		FlatIntelliJLaf.setup();
+		FlatDarculaLaf.setup();
+		FlatDarkLaf.setup();
+		try{
+			UIManager.setLookAndFeel(Config.theme);
+		}catch(Exception e){
+			System.out.println("erreur dans le load du theme au mainFrame : " + e);
+		}
 
-        JFrame window = new JFrame();
+        window = new JFrame();
 
 		window.setTitle("Tile Map Editor");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
