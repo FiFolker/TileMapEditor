@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -16,16 +18,21 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import controls.KeyHandler;
+import interfaces.HUD;
+import interfaces.TopMenuBar;
+import interfaces.TreeTiles;
 import settings.Config;
 
 public class TileEditorPanel extends JPanel implements Runnable{
 
 	Thread drawThread;
 	public TopMenuBar menuB = new TopMenuBar(this);
-	TreeTiles TreeT = new TreeTiles(this);
-	Coordonnees mouseCasePos = new Coordonnees(0, 0);
+	public TreeTiles TreeT = new TreeTiles(this);
+	public Coordonnees mouseCasePos = new Coordonnees(0, 0);
 	public JTree jt = new JTree(TreeT.listOfTiles);
-	KeyHandler keyH = new KeyHandler();
+	public KeyHandler keyH = new KeyHandler();
+	HUD hud = new HUD(this);
 
 	public int indexOfSelectedNode = 0;
 	int topLeftCorner = 0;
@@ -186,14 +193,20 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				
 			}
 		}
-		g2.setFont(new Font("arial", Font.BOLD, 13));
-		if(TopMenuBar.tileM != null){
-			g2.drawString("Tiles séléctionné : ", 200, 615);
-			g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, 320, 600, 24, 24, null);
-			g2.drawString(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).name, 350, 615);
+
+		if(mouseCasePos.isInGrid()){
+			int posX = topLeftCorner + mouseCasePos.column*Config.tileSize;
+			int posY = topCorner + mouseCasePos.line*Config.tileSize;
+			g2.setColor(Color.gray);
+			g2.setStroke(new BasicStroke(1f));
+			if(TopMenuBar.tileM != null){
+				g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, posX, posY, Config.tileSize, Config.tileSize, null);
+			}
+			g2.drawRect(posX, posY, Config.tileSize, Config.tileSize);
 		}
-		g2.drawString("Colonne : " + mouseCasePos.column, 200, 650);
-		g2.drawString("Ligne : " + mouseCasePos.line, 285, 650);
+
+		hud.draw(g2);
+		
 	}
 	
 	public void convertMousePosToBoardPos() {

@@ -1,4 +1,4 @@
-package main;
+package controls;
 
 import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;

@@ -1,4 +1,4 @@
-package main;
+package interfaces;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import main.TileEditorPanel;
 import settings.Config;
 import settings.ConfigFrame;
 import tiles.TilesManager;
@@ -126,6 +127,7 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void helpItemAction(ActionEvent evt) {
+		JOptionPane.showMessageDialog(TE, "[CTRL + S] : Sauvegarde\n[G] : Afficher/Cacher la Grille", "Aide", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	protected void configItemAction(ActionEvent evt) {

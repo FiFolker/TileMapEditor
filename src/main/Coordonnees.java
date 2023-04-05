@@ -4,8 +4,8 @@ import settings.Config;
 
 public class Coordonnees {
 
-	int line;
-	int column;
+	public int line;
+	public int column;
 	
 
 	Coordonnees(int numLine, int numCol){

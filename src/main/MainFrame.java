@@ -8,6 +8,10 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+
+import controls.MouseHandler;
+import interfaces.TopMenuBar;
+
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import settings.Config;
@@ -44,6 +48,7 @@ public class MainFrame {
 		window.addMouseListener(mouseH);
 		window.addMouseMotionListener(mouseH);
 		window.addMouseWheelListener(mouseH);
+		
 		
 
 		window.add(TileEdit);

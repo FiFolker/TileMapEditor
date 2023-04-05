@@ -1,4 +1,4 @@
-package main;
+package controls;
 
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -11,12 +11,12 @@ import javax.swing.SwingUtilities;
 
 public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
 	
-	int x;
-	int y;
+	public int x;
+	public int y;
 	
-	int wheel;
+	public int wheel;
 
-	boolean leftClicked, middleClicked;
+	public boolean leftClicked;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -37,10 +37,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 		if((modifiers & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK){
 			leftClicked = true;
 		}
-		
-		if ((modifiers & InputEvent.BUTTON2_DOWN_MASK) == InputEvent.BUTTON2_DOWN_MASK && SwingUtilities.isMiddleMouseButton(e)) {
-			middleClicked = true;
-		}
+
 	}
 
 	@Override
@@ -50,9 +47,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 			leftClicked = false;
 		}
 
-		if (SwingUtilities.isMiddleMouseButton(e)) {
-			middleClicked = false;
-		}
 	}
 
 	@Override

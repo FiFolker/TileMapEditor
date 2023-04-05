@@ -1,8 +1,9 @@
-package main;
+package interfaces;
 
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import main.TileEditorPanel;
 import tiles.Tile;
 
 public class TreeTiles{

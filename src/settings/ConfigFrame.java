@@ -23,10 +23,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-
+import interfaces.TopMenuBar;
 import main.MainFrame;
 import main.TileEditorPanel;
-import main.TopMenuBar;
 
 public class ConfigFrame extends JFrame{
 
