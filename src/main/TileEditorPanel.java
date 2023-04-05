@@ -4,18 +4,13 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Objects;
-import java.util.concurrent.locks.Condition;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
@@ -34,6 +29,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	public JTree jt = new JTree(TreeT.listOfTiles);
 	public KeyHandler keyH = new KeyHandler();
 	HUD hud = new HUD(this);
+	public Brush brush = new Brush(this);
 
 	public int indexOfSelectedNode = 0;
 	int topLeftCorner = 0;
@@ -69,8 +65,6 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 		topLeftCorner = jt.getPreferredSize().width+20;
 		topCorner = TopMenuBar.sizeOfTopMenuBar.height;
-		System.out.println(topLeftCorner);
-		System.out.println(topCorner);
 	}
 
 
@@ -118,22 +112,21 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		}
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
-				try{
-					TopMenuBar.tileM.map[mouseCasePos.column][mouseCasePos.line] = indexOfSelectedNode;
-				}catch(Exception e){
-					System.out.println("Erreur dans la pose du tiles : " + e);
-				}
+				brush.drawTile();
+				
 			}
-			
+
+
 			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize < Config.nbCol && Config.gridHeight/Config.tileSize < Config.nbRow){
 				Config.tileSize --;
-				
 				MainFrame.mouseH.wheel = 0;
 			}
 			else if(MainFrame.mouseH.wheel < 0 && keyH.ctrlPressed && Config.tileSize+1 <= 64){
 				Config.tileSize ++;
 				MainFrame.mouseH.wheel = 0;
 			}
+
+			
 			this.requestFocusInWindow();
 		}
 
@@ -154,7 +147,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				shiftVertical --;
 				keyH.moveUp = false;
 			}
-			if(keyH.moveRight && (Config.gridWidth/Config.tileSize) + shiftHorizontal+1 < TopMenuBar.tileM.map.length){
+			if(keyH.moveRight && (Config.gridWidth/Config.tileSize) + shiftHorizontal+1 < Config.nbCol){
 				shiftHorizontal ++;
 				keyH.moveRight = false;
 			}
@@ -162,7 +155,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				shiftHorizontal --;
 				keyH.moveLeft = false;
 			}
-			if(keyH.moveDown && !keyH.ctrlPressed && (Config.gridHeight/Config.tileSize) + shiftVertical+1 < TopMenuBar.tileM.map[0].length){
+			if(keyH.moveDown && !keyH.ctrlPressed && (Config.gridHeight/Config.tileSize) + shiftVertical+1 < Config.nbRow){
 				shiftVertical ++;
 				keyH.moveDown = false;
 			}
@@ -189,8 +182,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 						if(y+shiftVertical<0){
 							shiftVertical = 0;
 						}
+
 						int tilesValue = TopMenuBar.tileM.map[x+shiftHorizontal][y+shiftVertical];
-						
 						
 						g2.drawImage(TopMenuBar.tileM.tiles.get(tilesValue).image, posX, posY, Config.tileSize, Config.tileSize, null);
 					}
@@ -201,8 +194,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				
 			}
 		}
-
-		if(mouseCasePos.isInGrid()){
+		if(keyH.previState && mouseCasePos.isInGrid()){
 			int posX = topLeftCorner + (mouseCasePos.column-shiftHorizontal)*Config.tileSize;
 			int posY = topCorner + (mouseCasePos.line-shiftVertical)*Config.tileSize;
 			if(Objects.equals(Config.theme, MainFrame.lightTheme)){
@@ -215,7 +207,9 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, posX, posY, Config.tileSize, Config.tileSize, null);
 			}
 			g2.drawRect(posX, posY, Config.tileSize, Config.tileSize);
+			
 		}
+		
 
 		hud.draw(g2);
 		

@@ -22,9 +22,10 @@ import settings.ConfigFrame;
 import tiles.TilesManager;
 
 public class TopMenuBar extends JMenuBar{
-	public JMenu fileMenu, tilesMenu, sortTilesMenu, viewMenu;
+	public JMenu fileMenu, tilesMenu, viewMenu, brushMenu;
 	public JMenuItem loadMapItem, saveMapItem, saveMapAsItem,leaveItem, loadTilesFolderItem,
-	 loadTilesMapItem, sortByNumberItem, sortByOriginalItem, helpItem, configItem, newMapItem, showGridItem;
+	 loadTilesSheetItem, helpItem, configItem, newMapItem, showGridItem, showPrevisualisationItem,
+	 defaultBrushItem, repaintAllBrushItem, repaintAllOccurenceBrushItem;
 
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
@@ -57,67 +58,64 @@ public class TopMenuBar extends JMenuBar{
 		tilesMenu = new JMenu("Tiles");
 
 		loadTilesFolderItem = new JMenuItem("Chargers Dossier de Tiles");
-		loadTilesMapItem = new JMenuItem("Charger TilesMap");
+		loadTilesSheetItem = new JMenuItem("Charger Tiles Sheet");
 
 		tilesMenu.add(loadTilesFolderItem);
-		tilesMenu.add(loadTilesMapItem);
-
-
-		sortTilesMenu = new JMenu("Trier Tiles");
-
-		tilesMenu.add(sortTilesMenu);
-
-		sortByNumberItem = new JMenuItem("Trier par numéro");
-		sortByOriginalItem = new JMenuItem("Trier par sens d'apparition dans le dossier");
-
-		sortTilesMenu.add(sortByNumberItem);
-		sortTilesMenu.add(sortByOriginalItem);
+		tilesMenu.add(loadTilesSheetItem);
 
 		viewMenu = new JMenu("Vue");
 
 		showGridItem = new JMenuItem("Afficher / Cacher la grille (G)");
+		showPrevisualisationItem = new JMenuItem("Afficher / Cacher la prévisualisation (P)");
 
 		viewMenu.add(showGridItem);
+		viewMenu.add(showPrevisualisationItem);
+
+		brushMenu = new JMenu("Pinceau");
+
+		defaultBrushItem = new JMenuItem("Pinceau par défaut (1 par 1)");
+		repaintAllBrushItem = new JMenuItem("Repaindre toute la carte");
+		repaintAllOccurenceBrushItem = new JMenuItem("Repaindre toutes les occurences");
+
+		brushMenu.add(defaultBrushItem);
+		brushMenu.add(repaintAllBrushItem);
+		brushMenu.add(repaintAllOccurenceBrushItem);
 
 		addActionListenerToJMenuItems();
 
 		this.add(fileMenu);
 		this.add(tilesMenu);
 		this.add(viewMenu);
+		this.add(brushMenu);
 		sizeOfTopMenuBar = getPreferredSize();
 	}
 
 	private void addActionListenerToJMenuItems(){ // add parameter with JMenuItems, arraylist of Items and add with for 
 		// FILES
-		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMapItemAction(evt); }});
+		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMap(); }});
 		loadMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadMapItemAction(evt); }});
-		saveMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapItemAction(evt); }});
+		saveMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMap(); }});
 		saveMapAsItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapAsItemAction(evt); }});
-		configItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { configItemAction(evt); }});
+		configItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { new ConfigFrame(TE); }});
 		helpItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { helpItemAction(evt); }});
 		leaveItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { System.exit(0); }});
 
 		// TILES
-		loadTilesFolderItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesFolderItemAction(evt); }});
-		loadTilesMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesMapItemAction(evt); }});
-		sortByNumberItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { sortByNumberItemAction(evt); }});
-		sortByOriginalItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { sortByOriginalItemAction(evt); }});
+		loadTilesFolderItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesFolder(); }});
+		loadTilesSheetItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadTilesSheetItemAction(evt); }});
 
 		// VIEW
-		showGridItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { showGridItemAction(evt); }});
-		
-		
-	}
+		showGridItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.keyH.gridState = !TE.keyH.gridState; }});
+		showPrevisualisationItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.keyH.previState = !TE.keyH.previState; }});
 
-	protected void showGridItemAction(ActionEvent evt) {
-		TE.keyH.gridState = !TE.keyH.gridState;
+		// BRUSH
+		defaultBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.defaultBrush; }});
+		repaintAllBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.repaintAll; }});
+		repaintAllOccurenceBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.repaintAllOccurence; }});
+		
 	}
 
 	protected void saveMapAsItemAction(ActionEvent evt) {
-	}
-
-	protected void newMapItemAction(ActionEvent evt) {
-		newMap();
 	}
 
 	public void newMap(){
@@ -131,25 +129,16 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void helpItemAction(ActionEvent evt) {
-		JOptionPane.showMessageDialog(TE, "[CTRL + S] : Sauvegarde\n[G] : Afficher/Cacher la Grille\n[CTRL + N] : Nouvelle Map", "Aide", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(TE, 
+		"[CTRL + S] : Sauvegarde\n" +
+		"[G] : Afficher/Cacher la Grille\n"+
+		"[CTRL + N] : Nouvelle Map\n"+
+		"[P] : Activer/Désactiver la Prévisualisation du Tile",
+		 "Aide", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	protected void configItemAction(ActionEvent evt) {
-		new ConfigFrame(TE);
-	}
-
-	protected void sortByOriginalItemAction(ActionEvent evt) {
-	}
-
-	protected void sortByNumberItemAction(ActionEvent evt) {
-	}
-
-	protected void loadTilesMapItemAction(ActionEvent evt) {
+	protected void loadTilesSheetItemAction(ActionEvent evt) {
 		
-	}
-
-	protected void loadTilesFolderItemAction(ActionEvent evt) {
-		loadTilesFolder();
 	}
 
 	public void loadTilesFolder(){
@@ -171,11 +160,7 @@ public class TopMenuBar extends JMenuBar{
 		}
 	}
 
-   
 
-	protected void saveMapItemAction(ActionEvent evt) {
-		saveMap();
-	}
 
 	public void saveMap(){
 		if(TopMenuBar.tileM == null){
