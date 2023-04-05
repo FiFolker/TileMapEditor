@@ -38,7 +38,7 @@ public class TopMenuBar extends JMenuBar{
 		this.setPreferredSize(new Dimension(1080, 25));
 		fileMenu = new JMenu("Fichiers");
 
-		newMapItem = new JMenuItem("Nouvelle Map");
+		newMapItem = new JMenuItem("Nouvelle Map (CTRL + N)");
 		loadMapItem = new JMenuItem("Charger Map");
 		saveMapAsItem = new JMenuItem("Sauvegarder sous (CTRL + S)");
 		saveMapItem = new JMenuItem("Sauvegarder (CTRL + S)");
@@ -48,6 +48,7 @@ public class TopMenuBar extends JMenuBar{
 
 		fileMenu.add(newMapItem);
 		fileMenu.add(loadMapItem);
+		fileMenu.add(saveMapAsItem);
 		fileMenu.add(saveMapItem);
 		fileMenu.add(configItem);
 		fileMenu.add(helpItem);
@@ -116,6 +117,10 @@ public class TopMenuBar extends JMenuBar{
 	}
 
 	protected void newMapItemAction(ActionEvent evt) {
+		newMap();
+	}
+
+	public void newMap(){
 		int res = confirmMessage(TE);
 		if(res == JOptionPane.YES_OPTION){
 			tileM = null;
@@ -123,11 +128,10 @@ public class TopMenuBar extends JMenuBar{
 			TE.jt.collapseRow(0);
 			Config.resetConfig();
 		}
-		
 	}
 
 	protected void helpItemAction(ActionEvent evt) {
-		JOptionPane.showMessageDialog(TE, "[CTRL + S] : Sauvegarde\n[G] : Afficher/Cacher la Grille", "Aide", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(TE, "[CTRL + S] : Sauvegarde\n[G] : Afficher/Cacher la Grille\n[CTRL + N] : Nouvelle Map", "Aide", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	protected void configItemAction(ActionEvent evt) {
@@ -198,8 +202,10 @@ public class TopMenuBar extends JMenuBar{
 	protected void loadMapItemAction(ActionEvent event) {
 		boolean tilesSelected = true;
 		if(Config.directoryOfTiles == null){
-			JOptionPane.showMessageDialog(TE, "Vous devez choisir un fichier de tiles pour charger votre map !");
-			loadTilesFolder();
+			int res = JOptionPane.showOptionDialog(TE,"Vous devez choisir un fichier de tiles pour charger votre map !", "INFORMATON", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+			if(res == JOptionPane.OK_OPTION){
+				loadTilesFolder();
+			}
 		}
 		tilesSelected = tileM != null;
 		if(tilesSelected){

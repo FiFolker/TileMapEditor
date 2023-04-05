@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Objects;
 import java.util.concurrent.locks.Condition;
 
 import javax.swing.JFrame;
@@ -139,27 +140,29 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			menuB.saveMap();
 			keyH.save = false;
 		}
+		if(keyH.newMap){
+			menuB.newMap();
+			shiftHorizontal = 0;
+			shiftVertical = 0;
+			keyH.newMap = false;
+		}
 		
 
 		if(TopMenuBar.tileM != null){
-			if(keyH.moveUp){
-				shiftVertical ++;
-				System.out.println("Déplacement Haut !");
+			if(keyH.moveUp ){
+				shiftVertical --;
 				keyH.moveUp = false;
 			}
-			if(keyH.moveRight){
-				shiftHorizontal --;
-				System.out.println("Déplacement Droite !");
+			if(keyH.moveRight && (Config.gridWidth/Config.tileSize) + shiftHorizontal+1 < TopMenuBar.tileM.map.length){
+				shiftHorizontal ++;
 				keyH.moveRight = false;
 			}
 			if(keyH.moveLeft){
-				shiftHorizontal ++;
-				System.out.println("Déplacement Gauche !");
+				shiftHorizontal --;
 				keyH.moveLeft = false;
 			}
-			if(keyH.moveDown && !keyH.ctrlPressed){
-				shiftVertical --;
-				System.out.println("Déplacement Bas !");
+			if(keyH.moveDown && !keyH.ctrlPressed && (Config.gridHeight/Config.tileSize) + shiftVertical+1 < TopMenuBar.tileM.map[0].length){
+				shiftVertical ++;
 				keyH.moveDown = false;
 			}
 		}
@@ -178,11 +181,15 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				int posY = topCorner+Config.tileSize*y;
 				if(posX >= topLeftCorner && posX <= Config.gridWidth + topLeftCorner && posY >= topCorner && posY <= Config.gridHeight + topCorner){
 					if(TopMenuBar.tileM != null && !TopMenuBar.tileM.tiles.isEmpty()){
-						int tilesValue = TopMenuBar.tileM.map[x][y];
-						if(x+shiftHorizontal < TopMenuBar.tileM.map.length && x+shiftHorizontal > 0 
-						&& y+shiftVertical < TopMenuBar.tileM.map[x].length && y+shiftVertical > 0){
-							tilesValue = TopMenuBar.tileM.map[x+shiftHorizontal][y+shiftVertical];
+						
+						if(x+shiftHorizontal < 0){
+							shiftHorizontal = 0;
 						}
+						if(y+shiftVertical<0){
+							shiftVertical = 0;
+						}
+						int tilesValue = TopMenuBar.tileM.map[x+shiftHorizontal][y+shiftVertical];
+						
 						
 						g2.drawImage(TopMenuBar.tileM.tiles.get(tilesValue).image, posX, posY, Config.tileSize, Config.tileSize, null);
 					}
@@ -197,8 +204,12 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		if(mouseCasePos.isInGrid()){
 			int posX = topLeftCorner + mouseCasePos.column*Config.tileSize;
 			int posY = topCorner + mouseCasePos.line*Config.tileSize;
-			g2.setColor(Color.gray);
-			g2.setStroke(new BasicStroke(1f));
+			if(Objects.equals(Config.theme, MainFrame.lightTheme)){
+				g2.setColor(Color.gray);
+			}else{
+				g2.setColor(Color.black);
+			}
+			g2.setStroke(new BasicStroke(2f));
 			if(TopMenuBar.tileM != null){
 				g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, posX, posY, Config.tileSize, Config.tileSize, null);
 			}
@@ -213,8 +224,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		int x = (MainFrame.mouseH.x - topLeftCorner - 10) / Config.tileSize; // 10 = marge du bord
 		int y = (MainFrame.mouseH.y - topCorner - 56) / Config.tileSize; // 50 = marge du haut
 		
-		mouseCasePos.line = y;
-		mouseCasePos.column = x;
+		mouseCasePos.line = y;// + shiftVertical
+		mouseCasePos.column = x ;//+ shiftHorizontal
 		if (MainFrame.mouseH.x < topLeftCorner+10 || x > Config.gridWidth/Config.tileSize || MainFrame.mouseH.y < topCorner+56 || y > Config.gridHeight/Config.tileSize) {
 			mouseCasePos.line = -1;
 			mouseCasePos.column = -1;

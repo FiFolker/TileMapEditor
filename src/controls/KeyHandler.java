@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
 
-	public boolean ctrlPressed, moveUp, moveRight, moveDown, moveLeft, gridState = true, save = false;
+	public boolean ctrlPressed, moveUp, moveRight, moveDown, moveLeft, gridState = true, save = false, newMap = false;
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -21,8 +21,9 @@ public class KeyHandler implements KeyListener{
 		if(code == KeyEvent.VK_CONTROL){
 			ctrlPressed = true;
 		} 
-		if(ctrlPressed && code == KeyEvent.VK_S){
-			save = true;
+		if(ctrlPressed){
+			save = code == KeyEvent.VK_S;
+			newMap = code == KeyEvent.VK_N;
 		} 
 		if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP){
 			moveUp = true;
