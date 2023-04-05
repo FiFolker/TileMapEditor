@@ -119,7 +119,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 				try{
-					TopMenuBar.tileM.map[mouseCasePos.column + shiftHorizontal][mouseCasePos.line + shiftVertical] = indexOfSelectedNode;
+					TopMenuBar.tileM.map[mouseCasePos.column][mouseCasePos.line] = indexOfSelectedNode;
 				}catch(Exception e){
 					System.out.println("Erreur dans la pose du tiles : " + e);
 				}
@@ -127,6 +127,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			
 			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize < Config.nbCol && Config.gridHeight/Config.tileSize < Config.nbRow){
 				Config.tileSize --;
+				
 				MainFrame.mouseH.wheel = 0;
 			}
 			else if(MainFrame.mouseH.wheel < 0 && keyH.ctrlPressed && Config.tileSize+1 <= 64){
@@ -202,8 +203,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		}
 
 		if(mouseCasePos.isInGrid()){
-			int posX = topLeftCorner + mouseCasePos.column*Config.tileSize;
-			int posY = topCorner + mouseCasePos.line*Config.tileSize;
+			int posX = topLeftCorner + (mouseCasePos.column-shiftHorizontal)*Config.tileSize;
+			int posY = topCorner + (mouseCasePos.line-shiftVertical)*Config.tileSize;
 			if(Objects.equals(Config.theme, MainFrame.lightTheme)){
 				g2.setColor(Color.gray);
 			}else{
@@ -224,8 +225,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		int x = (MainFrame.mouseH.x - topLeftCorner - 10) / Config.tileSize; // 10 = marge du bord
 		int y = (MainFrame.mouseH.y - topCorner - 56) / Config.tileSize; // 50 = marge du haut
 		
-		mouseCasePos.line = y;// + shiftVertical
-		mouseCasePos.column = x ;//+ shiftHorizontal
+		mouseCasePos.line = y + shiftVertical;
+		mouseCasePos.column = x + shiftHorizontal;
 		if (MainFrame.mouseH.x < topLeftCorner+10 || x > Config.gridWidth/Config.tileSize || MainFrame.mouseH.y < topCorner+56 || y > Config.gridHeight/Config.tileSize) {
 			mouseCasePos.line = -1;
 			mouseCasePos.column = -1;

@@ -251,9 +251,11 @@ public class TopMenuBar extends JMenuBar{
 				split = scan.nextLine().split(currDelimiter);
 			}
 				
+		}catch(NumberFormatException nfe){
+			JOptionPane.showOptionDialog(TE, "Erreur dans le chargement de la map mauvais délimiteur !", "ERREUR", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+			System.out.println("Erreur dans le choix du délimiteur au chargement de la map ! ");
 		}catch(Exception e){
 			System.out.println("Exception catch dans le load d'une map "+ e);
-			e.printStackTrace();
 		}
 		Config.nbCol = col;
 		Config.nbRow = row;
