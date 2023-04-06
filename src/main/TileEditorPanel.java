@@ -41,6 +41,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	int shiftVertical = 0; // + = top - = bottom
 
 	ArrayList<int[][]> undo;
+	int maxSizeUndo = 60;
 
 	// FPS
 	int FPS = 25;
@@ -118,6 +119,9 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 				if(MainFrame.mouseH.leftClickedOnceTime){
+					if(undo.size() >= maxSizeUndo){
+						undo.remove(0);
+					}
 					undo.add(copyArray2D( TopMenuBar.tileM.map));
 					MainFrame.mouseH.leftClickedOnceTime = false;
 				}

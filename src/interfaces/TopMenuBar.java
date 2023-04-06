@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -133,7 +132,8 @@ public class TopMenuBar extends JMenuBar{
 		"[CTRL + S] : Sauvegarde\n" +
 		"[G] : Afficher/Cacher la Grille\n"+
 		"[CTRL + N] : Nouvelle Map\n"+
-		"[P] : Activer/Désactiver la Prévisualisation du Tile",
+		"[P] : Activer/Désactiver la Prévisualisation du Tile\n"+
+		"[CTRL + Z] : Undo",
 		 "Aide", JOptionPane.INFORMATION_MESSAGE);
 	}
 
