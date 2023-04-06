@@ -1,5 +1,6 @@
 package controls;
 
+import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,6 +14,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	
 	public int x;
 	public int y;
+	public Point location = new Point(0, 0);
 	
 	public int wheel;
 
@@ -22,6 +24,9 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	public void mouseMoved(MouseEvent e) {
 		x = e.getX();
 		y = e.getY();
+		location = e.getPoint();
+		location.x -= 10;
+		location.y -= 56;
 		//System.out.println("x : " + MainFrame.mouseH.x);
 		//System.out.println("y : " + MainFrame.mouseH.y);
 	}
@@ -46,6 +51,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			leftClicked = false;
+			leftClickedOnceTime = false;
 		}
 
 	}

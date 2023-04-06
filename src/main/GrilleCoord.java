@@ -44,11 +44,11 @@ public class GrilleCoord {
 		}
 	}
 
-	public void convertMousePosToBoardPos(int leftCorner, int topCorner) {
+	public void convertMousePosToBoardPos(int leftCorner, int topCorner, int shiftVertical) {
 		int x = (MainFrame.mouseH.x - leftCorner - 10) / tileSize; // 10 = marge du bord
 		int y = (MainFrame.mouseH.y - topCorner - 56) / tileSize; // 50 = marge du haut
 		
-		line = y;
+		line = y + shiftVertical/4;
 		column = x;
 		if (MainFrame.mouseH.x < leftCorner+10 || x >= maxColumn || MainFrame.mouseH.y < topCorner+56 || y > maxLine) {
 			line = -1;
