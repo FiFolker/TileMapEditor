@@ -23,8 +23,8 @@ public class HUD {
         g2.setColor(Color.black);
 		if(TopMenuBar.tileM != null){
 			g2.drawString("Tiles séléctionné : ", 200, 615);
-			g2.drawImage(TopMenuBar.tileM.tiles.get(TE.indexOfSelectedNode).image, 320, 600, 24, 24, null);
-			g2.drawString(TopMenuBar.tileM.tiles.get(TE.indexOfSelectedNode).name, 350, 615);
+			g2.drawImage(TopMenuBar.tileM.tiles.get(TE.indexOfSelectedTiles).image, 320, 600, 24, 24, null);
+			g2.drawString(TopMenuBar.tileM.tiles.get(TE.indexOfSelectedTiles).name, 350, 615);
 		}
 		g2.drawString("Colonne : " + TE.mouseCasePos.column, 200, 650);
 		g2.drawString("Ligne : " + TE.mouseCasePos.line, 285, 650);

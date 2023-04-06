@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import interfaces.TopMenuBar;
+import main.GrilleCoord;
 import main.MainFrame;
 import main.TileEditorPanel;
 
@@ -72,7 +73,7 @@ public class ConfigFrame extends JFrame{
 
 		configWindow.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosed(WindowEvent e) {
 				TE.menuB.configFrameState = false;
 			}
 		});
@@ -160,6 +161,7 @@ public class ConfigFrame extends JFrame{
 							
 							TopMenuBar.tileM.reloadMap();
 						}
+						TE.setup();
 					}
 				}
 

@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -18,23 +17,22 @@ import javax.swing.event.TreeSelectionListener;
 
 import controls.KeyHandler;
 import interfaces.HUD;
+import interfaces.TileSelector;
 import interfaces.TopMenuBar;
-import interfaces.TreeTiles;
 import settings.Config;
 
 public class TileEditorPanel extends JPanel implements Runnable{
 
 	Thread drawThread;
 	public TopMenuBar menuB = new TopMenuBar(this);
-	public TreeTiles TreeT = new TreeTiles(this);
-	public Coordonnees mouseCasePos = new Coordonnees(0, 0);
-	public JTree jt = new JTree(TreeT.listOfTiles);
+	public GrilleCoord mouseCasePos;
 	public KeyHandler keyH = new KeyHandler();
 	HUD hud = new HUD(this);
 	public Brush brush = new Brush(this);
+	TileSelector TS ;
 
 	// Paramètre du plateau
-	public int indexOfSelectedNode = 0;
+	public int indexOfSelectedTiles = 0;
 	int topLeftCorner = 0;
 	int topCorner = 0;
 	int shiftHorizontal = 0; // + = right - = left
@@ -49,27 +47,16 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	public TileEditorPanel(){
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
-		undo = new ArrayList<>();
+
+		setup();
 		
-		jt.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height*2));
-		jt.addTreeSelectionListener(new TreeSelectionListener() {
+	}
 
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				indexOfSelectedNode = jt.getRowForPath(jt.getSelectionPath()) - 1;
-				if(indexOfSelectedNode <= -1){
-					indexOfSelectedNode = 0;
-				}
-			}
-			
-		});
-		this.add(jt);
-		JScrollPane scroll = new JScrollPane(jt);
-		scroll.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height - TopMenuBar.sizeOfTopMenuBar.height*2));
-		this.add(scroll);
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-		topLeftCorner = jt.getPreferredSize().width+20;
+	public void setup(){
+		mouseCasePos = new GrilleCoord(0, 0, Config.nbCol, Config.nbRow);
+		TS = new TileSelector(this, 0, 0);
+		undo = new ArrayList<>();
+		topLeftCorner = TS.cols*TS.tilePreviewSize+2*TS.tilePreviewSize;
 		topCorner = TopMenuBar.sizeOfTopMenuBar.height;
 	}
 
@@ -112,11 +99,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	}
 
 	public void update(){
-		convertMousePosToBoardPos();
-		if(MainFrame.mouseH.leftClicked && !this.hasFocus()){
-			this.requestFocusInWindow();
-		}
-		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
+		mouseCasePos.convertMousePosToBoardPos(topLeftCorner, topCorner, shiftHorizontal, shiftVertical);
+		if(mouseCasePos.isInGrid() && menuB.configFrameState == false){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 				if(MainFrame.mouseH.leftClickedOnceTime){
 					if(undo.size() >= maxSizeUndo){
@@ -135,7 +119,6 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				Config.tileSize ++;
 				MainFrame.mouseH.wheel = 0;
 			}
-
 			this.requestFocusInWindow();
 		}
 
@@ -174,6 +157,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				keyH.moveDown = false;
 			}
 		}
+		TS.update();
 	}
 
 	public void printArray(int[][] array){
@@ -235,28 +219,15 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			}
 			g2.setStroke(new BasicStroke(2f));
 			if(TopMenuBar.tileM != null){
-				g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedNode).image, posX, posY, Config.tileSize, Config.tileSize, null);
+				g2.drawImage(TopMenuBar.tileM.tiles.get(indexOfSelectedTiles).image, posX, posY, Config.tileSize, Config.tileSize, null);
 			}
 			g2.drawRect(posX, posY, Config.tileSize, Config.tileSize);
 			
 		}
-		
 
+		TS.draw(g2);
+		
 		hud.draw(g2);
-		
-	}
-	
-	public void convertMousePosToBoardPos() {
-		int x = (MainFrame.mouseH.x - topLeftCorner - 10) / Config.tileSize; // 10 = marge du bord
-		int y = (MainFrame.mouseH.y - topCorner - 56) / Config.tileSize; // 50 = marge du haut
-		
-		mouseCasePos.line = y + shiftVertical;
-		mouseCasePos.column = x + shiftHorizontal;
-		if (MainFrame.mouseH.x < topLeftCorner+10 || x > Config.gridWidth/Config.tileSize || MainFrame.mouseH.y < topCorner+56 || y > Config.gridHeight/Config.tileSize) {
-			mouseCasePos.line = -1;
-			mouseCasePos.column = -1;
-		}
-		
 		
 	}
 

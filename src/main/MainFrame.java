@@ -38,7 +38,7 @@ public class MainFrame {
 
 		window.setTitle("Tile Map Editor");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setResizable(false);
+		window.setResizable(true);
 		window.setIconImage(ImageIO.read(new File("assets/icons/tiled.png")));
 		window.setPreferredSize(new Dimension(1080, 720));
 		sizeOfWindow = window.getPreferredSize();

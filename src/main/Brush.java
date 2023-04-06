@@ -19,7 +19,7 @@ public class Brush {
 		switch(currentBrush){
 			case defaultBrush:
 				try{
-					TopMenuBar.tileM.map[TE.mouseCasePos.column][TE.mouseCasePos.line] = TE.indexOfSelectedNode;
+					TopMenuBar.tileM.map[TE.mouseCasePos.column][TE.mouseCasePos.line] = TE.indexOfSelectedTiles;
 				}catch(Exception e){
 					System.out.println("Erreur dans la pose du tiles : " + e);
 				}
@@ -37,7 +37,7 @@ public class Brush {
 	public void repaintAllBrush(){
 		for(int i=0; i<TopMenuBar.tileM.map.length; i++){
 			for(int j=0; j<TopMenuBar.tileM.map[i].length; j++){
-				TopMenuBar.tileM.map[i][j] = TE.indexOfSelectedNode;
+				TopMenuBar.tileM.map[i][j] = TE.indexOfSelectedTiles;
 			}
 		}
 	}
@@ -47,7 +47,7 @@ public class Brush {
 		for(int i=0; i<TopMenuBar.tileM.map.length; i++){
 			for(int j=0; j<TopMenuBar.tileM.map[i].length; j++){
 				if(occurenceToReplace == TopMenuBar.tileM.map[i][j]){
-					TopMenuBar.tileM.map[i][j] = TE.indexOfSelectedNode;
+					TopMenuBar.tileM.map[i][j] = TE.indexOfSelectedTiles;
 				}
 				
 			}

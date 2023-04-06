@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import main.GrilleCoord;
 import main.TileEditorPanel;
 import settings.Config;
 import settings.ConfigFrame;
@@ -121,9 +122,8 @@ public class TopMenuBar extends JMenuBar{
 		int res = confirmMessage(TE);
 		if(res == JOptionPane.YES_OPTION){
 			tileM = null;
-			TE.TreeT.listOfTiles.removeAllChildren();
-			TE.jt.collapseRow(0);
 			Config.resetConfig();
+			TE.setup();
 		}
 	}
 
@@ -153,8 +153,6 @@ public class TopMenuBar extends JMenuBar{
 				TopMenuBar.tileM = new TilesManager();
 			}
 			
-			TE.TreeT.addTilesToJTree();
-			TE.jt.updateUI();
 		} else {
 			System.out.println("No Selection ");
 		}
