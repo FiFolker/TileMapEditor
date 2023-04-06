@@ -16,7 +16,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	
 	public int wheel;
 
-	public boolean leftClicked;
+	public boolean leftClicked, leftClickedOnceTime;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -28,7 +28,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		//nothing
+		// nothing
 	}
 
 	@Override
@@ -36,6 +36,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 		int modifiers = e.getModifiersEx();
 		if((modifiers & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK){
 			leftClicked = true;
+			leftClickedOnceTime = true;
 		}
 
 	}

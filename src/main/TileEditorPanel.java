@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -31,11 +33,14 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	HUD hud = new HUD(this);
 	public Brush brush = new Brush(this);
 
+	// Paramètre du plateau
 	public int indexOfSelectedNode = 0;
 	int topLeftCorner = 0;
 	int topCorner = 0;
 	int shiftHorizontal = 0; // + = right - = left
 	int shiftVertical = 0; // + = top - = bottom
+
+	ArrayList<int[][]> undo;
 
 	// FPS
 	int FPS = 25;
@@ -43,7 +48,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	public TileEditorPanel(){
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
-		
+		undo = new ArrayList<>();
 		
 		jt.setPreferredSize(new Dimension(175, MainFrame.sizeOfWindow.height*2));
 		jt.addTreeSelectionListener(new TreeSelectionListener() {
@@ -112,11 +117,12 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		}
 		if(mouseCasePos.isInGrid() && menuB.configFrameState == false || this.hasFocus()){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
+				if(MainFrame.mouseH.leftClickedOnceTime){
+					undo.add(copyArray2D( TopMenuBar.tileM.map));
+					MainFrame.mouseH.leftClickedOnceTime = false;
+				}
 				brush.drawTile();
-				
 			}
-
-
 			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize < Config.nbCol && Config.gridHeight/Config.tileSize < Config.nbRow){
 				Config.tileSize --;
 				MainFrame.mouseH.wheel = 0;
@@ -126,7 +132,6 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				MainFrame.mouseH.wheel = 0;
 			}
 
-			
 			this.requestFocusInWindow();
 		}
 
@@ -140,8 +145,13 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			shiftVertical = 0;
 			keyH.newMap = false;
 		}
+		if(keyH.undo && TopMenuBar.tileM != null && !undo.isEmpty()){
+			int[][] undoMap = undo.get(undo.size()-1);
+			TopMenuBar.tileM.map = copyArray2D(undoMap);
+			undo.remove(undoMap);
+			keyH.undo = false;
+		}
 		
-
 		if(TopMenuBar.tileM != null){
 			if(keyH.moveUp ){
 				shiftVertical --;
@@ -160,8 +170,25 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				keyH.moveDown = false;
 			}
 		}
-		
-		
+	}
+
+	public void printArray(int[][] array){
+		System.out.println("--------------------------------------------------------------------------------");
+		for(int i=0; i<array.length;i++){
+			for(int j=0; j<array[i].length; j++){
+				System.out.print(array[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	public int[][] copyArray2D(int[][] arrayToCopy){
+		int[][] newArray = new int[arrayToCopy.length][];
+		for(int i=0; i<arrayToCopy.length;i++){
+			newArray[i] = arrayToCopy[i].clone();
+			
+		}
+		return newArray;
 	}
 
 	@Override

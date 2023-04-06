@@ -1,13 +1,12 @@
 package controls;
 
-import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
 public class KeyHandler implements KeyListener{
 
-	public boolean ctrlPressed, moveUp, moveRight, moveDown, moveLeft, gridState = true, save = false, newMap = false, previState = true;
+	public boolean ctrlPressed, moveUp, moveRight, moveDown, moveLeft, gridState = true, save = false, newMap = false, previState = true, undo = false;
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -24,6 +23,7 @@ public class KeyHandler implements KeyListener{
 		if(ctrlPressed){
 			save = code == KeyEvent.VK_S;
 			newMap = code == KeyEvent.VK_N;
+			undo = code == KeyEvent.VK_Z;
 		} 
 		if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP){
 			moveUp = true;
@@ -53,6 +53,9 @@ public class KeyHandler implements KeyListener{
 		if(code == KeyEvent.VK_CONTROL){
             ctrlPressed = false;
         }
+		if(code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_Z){
+			undo = false;
+		} 
 		if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP){
 			moveUp = false;
 		}
