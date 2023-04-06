@@ -1,7 +1,10 @@
 package settings;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -86,8 +89,11 @@ public class ConfigFrame extends JFrame{
 				break;
 		}
 
-		configWindow.add(setConfigPanel());
+		configWindow.add(setConfigPanel(), BorderLayout.CENTER);
+		configWindow.add(themePanel(), BorderLayout.NORTH);
+		configWindow.add(buttonPanel(), BorderLayout.SOUTH);
 		setButtonActionListener();
+
 		
 		configWindow.pack();
 
@@ -101,7 +107,7 @@ public class ConfigFrame extends JFrame{
 
 		fieldOnlyIntMaxLengthListener(nbColTextField, 3);
 		fieldOnlyIntMaxLengthListener(nbRowTextField, 3);
-
+		configPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 		configPanel.add(nbColInfo);
 		configPanel.add(nbColTextField);
 
@@ -111,6 +117,12 @@ public class ConfigFrame extends JFrame{
 		configPanel.add(delimiterInfo);
 		configPanel.add(delimiterTextField);
 
+		return configPanel;
+	}
+
+	public JPanel themePanel(){
+		JPanel configPanel = new JPanel();
+		configPanel.setLayout(new GridLayout(1,3));
 		configPanel.add(themeInfo);
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(lightThemeRadio);
@@ -119,11 +131,15 @@ public class ConfigFrame extends JFrame{
 		configPanel.add(lightThemeRadio);
 		configPanel.add(darkThemeRadio);
 		configPanel.add(darculaThemeRadio);
-		
+
+		return configPanel;
+	}
+
+	public JPanel buttonPanel(){
+		JPanel configPanel = new JPanel();
 
 		configPanel.add(okButton);
 		configPanel.add(cancelButton);
-
 		return configPanel;
 	}
 
