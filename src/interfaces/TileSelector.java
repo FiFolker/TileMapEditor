@@ -83,7 +83,13 @@ public class TileSelector {
 		index = shiftVertical;
 		for(int r = 0; r<rows; r++){
 			for(int c = 0;c<cols; c++){
+				g2.setStroke(new BasicStroke(1f));
+				g2.setColor(Color.black);
 				if(TopMenuBar.tileM != null && index < TopMenuBar.tileM.tiles.size()){
+					if(index == TE.indexOfSelectedTiles){
+						g2.setColor(Color.green);
+						g2.setStroke(new BasicStroke(2f));
+					}
 					g2.drawImage(TopMenuBar.tileM.tiles.get(index).image, c*tilePreviewSize+leftPos, r*tilePreviewSize+topPos, tilePreviewSize, tilePreviewSize, null);
 					index ++;
 				}
