@@ -40,7 +40,7 @@ public class MainFrame {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(true);
 		window.setIconImage(ImageIO.read(new File("assets/icons/tiled.png")));
-		window.setPreferredSize(new Dimension(1080, 720));
+		window.setPreferredSize(new Dimension(1280, 720));
 		sizeOfWindow = window.getPreferredSize();
 		
 		TileEditorPanel TileEdit = new TileEditorPanel();

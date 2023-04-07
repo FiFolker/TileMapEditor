@@ -1,10 +1,11 @@
 package main;
 
 import interfaces.TopMenuBar;
+import settings.Config;
 
 public class Brush {
 
-	public final String defaultBrush = "defaultBrush", repaintAll = "repaintAll", repaintAllOccurence = "repaintAllOccurence";
+	public final String defaultBrush = "defaultBrush", repaintAll = "repaintAll", repaintAllOccurence = "repaintAllOccurence", erase = "erase";
 	public String currentBrush;
 	TileEditorPanel TE;
 
@@ -14,6 +15,9 @@ public class Brush {
 
 	}
 
+	public void changeBrush(String brush){
+		currentBrush = brush;
+	}
 
 	public void drawTile(){
 		switch(currentBrush){
@@ -30,8 +34,27 @@ public class Brush {
 			case repaintAllOccurence:
 				repaintAllOccurenceBrush();
 				break;
+			case erase:
+				eraseBrush();
+				break;
 		}
 		
+	}
+
+	public void eraseBrush(){
+		int colVisible = Config.gridWidth/Config.tileSize;
+		int rowVisible = Config.gridWidth/Config.tileSize;
+		if(rowVisible < Config.nbRow){
+			rowVisible ++;
+		}
+		if(colVisible < Config.nbCol){
+			colVisible ++;
+		}
+		for(int i=0; i<colVisible; i++){
+			for(int j=0; j<rowVisible; j++){
+				TopMenuBar.tileM.map[i+TE.shiftHorizontal][j+TE.shiftVertical] = 0;
+			}
+		}
 	}
 
 	public void repaintAllBrush(){

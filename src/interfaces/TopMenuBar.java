@@ -25,7 +25,7 @@ public class TopMenuBar extends JMenuBar{
 	public JMenu fileMenu, tilesMenu, viewMenu, brushMenu;
 	public JMenuItem loadMapItem, saveMapItem, saveMapAsItem,leaveItem, loadTilesFolderItem,
 	 loadTilesSheetItem, helpItem, configItem, newMapItem, showGridItem, showPrevisualisationItem,
-	 defaultBrushItem, repaintAllBrushItem, repaintAllOccurenceBrushItem;
+	 defaultBrushItem, repaintAllBrushItem, repaintAllOccurenceBrushItem, eraseItem;
 
 	public static TilesManager tileM;
 	public TileEditorPanel TE;
@@ -76,10 +76,12 @@ public class TopMenuBar extends JMenuBar{
 		defaultBrushItem = new JMenuItem("Pinceau par défaut (1 par 1)");
 		repaintAllBrushItem = new JMenuItem("Repaindre toute la carte");
 		repaintAllOccurenceBrushItem = new JMenuItem("Repaindre toutes les occurences");
+		eraseItem = new JMenuItem("Effacer la partie visible de la carte");
 
 		brushMenu.add(defaultBrushItem);
 		brushMenu.add(repaintAllBrushItem);
 		brushMenu.add(repaintAllOccurenceBrushItem);
+		brushMenu.add(eraseItem);
 
 		addActionListenerToJMenuItems();
 
@@ -112,6 +114,7 @@ public class TopMenuBar extends JMenuBar{
 		defaultBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.defaultBrush; }});
 		repaintAllBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.repaintAll; }});
 		repaintAllOccurenceBrushItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.repaintAllOccurence; }});
+		eraseItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { TE.brush.currentBrush = TE.brush.erase; }});
 		
 	}
 
@@ -243,6 +246,7 @@ public class TopMenuBar extends JMenuBar{
 		Config.nbCol = col;
 		Config.nbRow = row;
 		Config.calculMapSize();
+		TE.setup();
 		return mapLoaded;
 	}
 

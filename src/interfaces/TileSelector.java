@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import main.GrilleCoord;
@@ -25,6 +27,7 @@ public class TileSelector {
 	// Variables personnels
 	GrilleCoord mousePos;
 	private int index = 0;
+	private HashMap<String, Button> listOfButtons;
 	private Rectangle upButton;
 	private Rectangle downButton;
 	private Polygon upTriangle;
@@ -35,6 +38,15 @@ public class TileSelector {
 		this.TE = TE;
 		this.leftPos = nLeftPos;
 		this.topPos = nTopPos;
+		
+		setup();
+
+		listOfButtons.put("upButton", new Button(upButton, upTriangle));
+		listOfButtons.put("downButton", new Button(downButton, downTriangle));
+	}
+
+	public void setup(){
+		listOfButtons = new HashMap<>();
 		mousePos = new GrilleCoord(0, 0, cols, rows, tilePreviewSize);
 		upButton = new Rectangle(leftPos + cols*tilePreviewSize + 5, topPos, tilePreviewSize, tilePreviewSize);
 		downButton = new Rectangle(leftPos + cols*tilePreviewSize + 5, topPos + tilePreviewSize + 2, tilePreviewSize, tilePreviewSize);
@@ -54,12 +66,12 @@ public class TileSelector {
 				System.out.println(TE.indexOfSelectedTiles);
 			}
 			
-			if(upButton.contains(MainFrame.mouseH.location) && MainFrame.mouseH.leftClickedOnceTime && shiftVertical > 0){
+			if(listOfButtons.get("upButton").isClicked() && shiftVertical > 0){
 				System.out.println("Vers le Haut");
 				shiftVertical -= cols;
 				MainFrame.mouseH.leftClickedOnceTime = false;
 			}
-			if(downButton.contains(MainFrame.mouseH.location) && MainFrame.mouseH.leftClickedOnceTime){
+			if(listOfButtons.get("downButton").isClicked()){
 				System.out.println("Vers le Bas");
 				shiftVertical += cols;
 				MainFrame.mouseH.leftClickedOnceTime = false;
@@ -82,10 +94,9 @@ public class TileSelector {
 				g2.drawRect(c*tilePreviewSize+leftPos, r*tilePreviewSize+topPos, tilePreviewSize, tilePreviewSize);
 			}
 		}
-		g2.draw(upButton);
-		g2.draw(downButton);
-		g2.draw(upTriangle);
-		g2.draw(downTriangle);
+		for(Button b : listOfButtons.values()){
+			b.draw(g2);
+		}
 		if(mousePos.isInGrid()){
 			int posX = leftPos + mousePos.column*tilePreviewSize;
 			int posY = topPos + (mousePos.line-(shiftVertical/4))*tilePreviewSize;

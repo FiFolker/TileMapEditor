@@ -10,6 +10,7 @@ import java.util.Objects;
 import javax.swing.JPanel;
 
 import controls.KeyHandler;
+import interfaces.BrushSelector;
 import interfaces.HUD;
 import interfaces.TileSelector;
 import interfaces.TopMenuBar;
@@ -24,6 +25,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	HUD hud = new HUD(this);
 	public Brush brush = new Brush(this);
 	TileSelector TS ;
+	BrushSelector BS;
 
 	// Paramètre du plateau
 	public int indexOfSelectedTiles = 0;
@@ -49,6 +51,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 	public void setup(){
 		mouseCasePos = new GrilleCoord(0, 0, Config.nbCol, Config.nbRow);
 		TS = new TileSelector(this, 0, 0);
+		BS = new BrushSelector(this, 10, TS.rows*TS.tilePreviewSize + 10);
 		undo = new ArrayList<>();
 		topLeftCorner = TS.cols*TS.tilePreviewSize+2*TS.tilePreviewSize;
 		topCorner = TopMenuBar.sizeOfTopMenuBar.height;
@@ -94,7 +97,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 	public void update(){
 		mouseCasePos.convertMousePosToBoardPos(topLeftCorner, topCorner, shiftHorizontal, shiftVertical);
-		if(mouseCasePos.isInGrid() && menuB.configFrameState == false){
+		if(mouseCasePos.isInGrid() && !menuB.configFrameState){
 			if(TopMenuBar.tileM != null && MainFrame.mouseH.leftClicked){
 				if(MainFrame.mouseH.leftClickedOnceTime){
 					if(undo.size() >= maxSizeUndo){
@@ -152,6 +155,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 			}
 		}
 		TS.update();
+		BS.update();
 	}
 
 	public void printArray(int[][] array){
@@ -221,6 +225,8 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 		TS.draw(g2);
 		
+		BS.draw(g2);
+
 		hud.draw(g2);
 		
 	}
