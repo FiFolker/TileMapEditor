@@ -108,7 +108,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 				}
 				brush.drawTile();
 			}
-			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize < Config.nbCol && Config.gridHeight/Config.tileSize < Config.nbRow){
+			if(MainFrame.mouseH.wheel > 0 && keyH.ctrlPressed && Config.gridWidth/Config.tileSize+shiftHorizontal < Config.nbCol-1 && Config.gridHeight/Config.tileSize+shiftVertical < Config.nbRow-1){
 				Config.tileSize --;
 				MainFrame.mouseH.wheel = 0;
 			}
