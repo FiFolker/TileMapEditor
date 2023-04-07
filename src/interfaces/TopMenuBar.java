@@ -97,7 +97,7 @@ public class TopMenuBar extends JMenuBar{
 		newMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { newMap(); }});
 		loadMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { loadMapItemAction(evt); }});
 		saveMapItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMap(); }});
-		saveMapAsItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapAsItemAction(evt); }});
+		saveMapAsItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { saveMapAs(); }});
 		configItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { new ConfigFrame(TE); }});
 		helpItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { helpItemAction(evt); }});
 		leaveItem.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { System.exit(0); }});
@@ -118,7 +118,50 @@ public class TopMenuBar extends JMenuBar{
 		
 	}
 
-	protected void saveMapAsItemAction(ActionEvent evt) {
+
+	public void saveMapAs(){
+		if(TopMenuBar.tileM == null){
+			System.out.println("Il faut avoir fait une map pour pouvoir la save");
+		}else{
+			JFileChooser chooser = fileChooser("Sauvegarder Sous", 1);
+			if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				Config.savePath = chooser.getSelectedFile().toString() + "\\";
+				setNameOfMap();
+				saveMap();
+			} else {
+				System.out.println("No Selection ");
+			}
+		}
+	}
+
+	public void saveMap(){
+		if(TopMenuBar.tileM == null){
+			System.out.println("Il faut avoir fait une map pour pouvoir la save");
+		}else{
+			if(Config.savePath == null){
+				saveMapAs();
+			}else{
+				try(FileWriter mapSaveFile = new FileWriter(new File(Config.savePath+Config.nameOfSave+Config.extension))){
+					for(int y = 0; y<TopMenuBar.tileM.map[0].length ; y++){
+						for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
+							String tileValue = Integer.toString(TopMenuBar.tileM.map[x][y]) + Config.delimiter;
+							mapSaveFile.write(tileValue);
+							//mapSaveFile.flush();
+						}
+						mapSaveFile.write("\n");
+					}
+					
+				}catch(Exception e){
+					System.out.println("Erreur dans le save de la map " + e);
+				}
+			}
+			
+		}
+	}
+
+	public void setNameOfMap(){
+		String name = JOptionPane.showInputDialog(this, "Le délimiteur du fichier est \""+Config.delimiter+"\" et l'extension est "+Config.extension+"(modifiable dans File>Paramètres) "+"\nSous quel nom voulez vous l'enregistrer ?");
+		Config.nameOfSave = name;
 	}
 
 	public void newMap(){
@@ -161,30 +204,6 @@ public class TopMenuBar extends JMenuBar{
 		}
 	}
 
-
-
-	public void saveMap(){
-		if(TopMenuBar.tileM == null){
-			System.out.println("Il faut avoir fait une map pour pouvoir la save");
-		}else{
-			String name = JOptionPane.showInputDialog(this, "Le délimiteur du fichier est \""+Config.delimiter+"\" et l'extension est "+Config.extension+"(modifiable dans File>Paramètres) "+
-			"\nSous quel nom voulez vous l'enregistrer ?");
-			try(FileWriter mapSaveFile = new FileWriter(new File("save/"+name+Config.extension))){
-				for(int y = 0; y<TopMenuBar.tileM.map[0].length ; y++){
-					for(int x = 0; x<TopMenuBar.tileM.map.length ; x++){
-						String tileValue = Integer.toString(TopMenuBar.tileM.map[x][y]) + Config.delimiter;
-						mapSaveFile.write(tileValue);
-						//mapSaveFile.flush();
-					}
-					mapSaveFile.write("\n");
-				}
-				
-			}catch(Exception e){
-				System.out.println("Erreur dans le save de la map " + e);
-			}
-		}
-	}
-
 	protected void loadMapItemAction(ActionEvent event) {
 		boolean tilesSelected = true;
 		if(Config.directoryOfTiles == null){
@@ -198,6 +217,8 @@ public class TopMenuBar extends JMenuBar{
 			JFileChooser chooser = fileChooser("Fichier de map", 2);
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				int[][] mapLoaded = loadMap(chooser.getSelectedFile());
+				Config.savePath = chooser.getCurrentDirectory().toString() + "\\";
+				Config.nameOfSave = chooser.getName(chooser.getSelectedFile()).split(".txt")[0];
 				TopMenuBar.tileM = new TilesManager(mapLoaded);
 			} else {
 				System.out.println("No Selection ");

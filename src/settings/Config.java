@@ -18,6 +18,8 @@ public class Config {
     public static String delimiter = " ";
     public static String extension = ".txt";
     public static String theme = MainFrame.lightTheme;
+    public static String savePath = null;
+    public static String nameOfSave = null;
 
     public static void calculMapSize(){
         Config.mapWidth = tileSize*nbCol;
@@ -32,6 +34,8 @@ public class Config {
         directoryOfTiles = null;
         delimiter = " ";
         extension = ".txt";
+        savePath = null;
+        nameOfSave = null;
     }
     
 }

@@ -61,18 +61,14 @@ public class TileSelector {
 				int numOfTiles = mousePos.line * cols + mousePos.column;
 				if(numOfTiles < TopMenuBar.tileM.tiles.size()){
 					TE.indexOfSelectedTiles =  numOfTiles;
-				}
-				
-				System.out.println(TE.indexOfSelectedTiles);
+				}	
 			}
 			
 			if(listOfButtons.get("upButton").isClicked() && shiftVertical > 0){
-				System.out.println("Vers le Haut");
 				shiftVertical -= cols;
 				MainFrame.mouseH.leftClickedOnceTime = false;
 			}
 			if(listOfButtons.get("downButton").isClicked()){
-				System.out.println("Vers le Bas");
 				shiftVertical += cols;
 				MainFrame.mouseH.leftClickedOnceTime = false;
 			}

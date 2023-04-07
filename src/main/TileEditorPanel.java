@@ -121,6 +121,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 
 		if(keyH.save){
 			menuB.saveMap();
+			hud.saved = true;
 			keyH.save = false;
 		}
 		if(keyH.newMap){
@@ -156,6 +157,7 @@ public class TileEditorPanel extends JPanel implements Runnable{
 		}
 		TS.update();
 		BS.update();
+		hud.update();
 	}
 
 	public void printArray(int[][] array){
